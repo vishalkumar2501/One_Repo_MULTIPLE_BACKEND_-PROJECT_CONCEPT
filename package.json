@@ -1,0 +1,23 @@
+{
+  "name": "one-repo-multiple-backend-project-concept",
+  "version": "1.0.0",
+  "description": "Multi-project backend engineering portfolio showcasing RESTful APIs, authentication, MongoDB schemas, aggregation, RBAC, and advanced backend patterns in Node.js.",
+  "private": true,
+  "scripts": {
+    "start:project-01": "npm --prefix projects/01-job-application-tracker start",
+    "dev:project-01": "npm --prefix projects/01-job-application-tracker run dev",
+    "test:project-01": "npm --prefix projects/01-job-application-tracker test"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "mongoose",
+    "rest-api",
+    "backend-development",
+    "jwt",
+    "portfolio"
+  ],
+  "author": "Vishal Kumar",
+  "license": "MIT"
+}
