@@ -8,7 +8,7 @@ A multi-project repository demonstrating backend architectures, clean code princ
 
 | Project # | Project Name | Focus Concepts | Days | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **01** | **Job Application Tracker API** | CRUD, Express, MongoDB, Mongoose, JWT, Auth Middleware, Joi Validation, Pagination, Filtering, Search | Days 1–12 | `Planned` |
+| **01** | **Job Application Tracker API** | CRUD, Express, MongoDB, Mongoose, JWT, Auth Middleware, Joi Validation, Pagination, Filtering, Search | Days 1–12 | `In Progress` |
 | **02** | **Expense & Budget Tracker API** | Aggregation Pipelines, Category Analytics, Date-range Filtering, Monthly Limits, Export Concepts | Days 13–24 | `Planned` |
 | **03** | **Blog & Community Platform API** | Role-Based Access Control (RBAC), Nested Comments, Slugs, Full-Text Search, Rate Limiting | Days 25–36 | `Planned` |
 | **04** | **Product Inventory & Order API** | Inventory Management, SKU Tracking, Mongoose Transactions (ACID), Order State Machine, Low-stock alerts | Days 37–48 | `Planned` |
@@ -22,7 +22,7 @@ A multi-project repository demonstrating backend architectures, clean code princ
 ## Detailed Daily Breakdown
 
 ### Project 1: Job Application Tracker API (Days 1–12)
-- [ ] **Day 1**: Project workspace structure, root & project package.json, base configuration, `.gitignore`, `.env.example`
+- [x] **Day 1**: Project workspace structure, root & project package.json, base configuration, `.gitignore`, `.env.example`
 - [ ] **Day 2**: Express server setup, environment config, graceful shutdown, health check endpoint
 - [ ] **Day 3**: MongoDB connection with Mongoose, connection retry logic, database event listeners
 - [ ] **Day 4**: User Schema & Model with bcrypt password hashing and instance methods
