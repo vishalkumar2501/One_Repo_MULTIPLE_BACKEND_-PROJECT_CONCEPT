@@ -61,7 +61,7 @@ projects/01-job-application-tracker/
 ## 📅 Roadmap for Project 01
 
 - [x] **Day 1**: Project structure initialization, environment loader, base configuration.
-- [ ] **Day 2**: Express server setup, graceful shutdown, health check endpoint.
+- [x] **Day 2**: Express server setup, graceful shutdown, health check endpoint.
 - [ ] **Day 3**: MongoDB connection with Mongoose and retry logic.
 - [ ] **Day 4**: User Schema & Model with password hashing.
 - [ ] **Day 5**: User Registration API with validation.
