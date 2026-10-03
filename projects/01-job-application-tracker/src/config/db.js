@@ -97,19 +97,14 @@ async function connectDB(uri = config.mongoUri, options = {}) {
 }
 
 /**
- * Gracefully terminates the Mongoose connection.
+ * Gracefully terminates the Mongoose connection and clears driver topology monitors.
  * 
- * @param {boolean} [force=false] - Force close connection immediately
  * @returns {Promise<void>}
  */
-async function disconnectDB(force = false) {
-  if (mongoose.connection.readyState === 0) {
-    return;
-  }
-
+async function disconnectDB() {
   isIntentionallyClosed = true;
   try {
-    await mongoose.connection.close(force);
+    await mongoose.disconnect();
   } catch (err) {
     console.error(`[MongoDB] Error while disconnecting: ${err.message}`);
     throw err;
