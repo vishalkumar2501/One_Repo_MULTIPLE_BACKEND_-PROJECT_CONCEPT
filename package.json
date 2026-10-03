@@ -4,6 +4,7 @@
   "description": "Multi-project backend engineering portfolio showcasing RESTful APIs, authentication, MongoDB schemas, aggregation, RBAC, and advanced backend patterns in Node.js.",
   "private": true,
   "scripts": {
+    "test": "npm run test:project-01",
     "start:project-01": "npm --prefix projects/01-job-application-tracker start",
     "dev:project-01": "npm --prefix projects/01-job-application-tracker run dev",
     "test:project-01": "npm --prefix projects/01-job-application-tracker test"
