@@ -1,4 +1,5 @@
 const config = require('../config/env');
+const { getConnectionState } = require('../config/db');
 const ApiResponse = require('../utils/apiResponse');
 
 /**
@@ -6,6 +7,7 @@ const ApiResponse = require('../utils/apiResponse');
  */
 const getHealthStatus = (req, res) => {
   const memoryUsage = process.memoryUsage();
+  const dbState = getConnectionState();
 
   const healthData = {
     status: 'UP',
@@ -13,6 +15,11 @@ const getHealthStatus = (req, res) => {
     timestamp: new Date().toISOString(),
     uptimeSeconds: Math.floor(process.uptime()),
     environment: config.env,
+    database: {
+      status: dbState.status,
+      readyState: dbState.readyState,
+      name: dbState.name
+    },
     memory: {
       rssMb: parseFloat((memoryUsage.rss / 1024 / 1024).toFixed(2)),
       heapUsedMb: parseFloat((memoryUsage.heapUsed / 1024 / 1024).toFixed(2)),

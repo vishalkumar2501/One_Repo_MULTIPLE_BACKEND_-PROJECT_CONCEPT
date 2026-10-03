@@ -47,6 +47,9 @@ describe('Express Application & Health API Test Suite', () => {
     assert.strictEqual(data.data.service, '01-job-application-tracker');
     assert.ok(typeof data.data.uptimeSeconds === 'number');
     assert.ok(typeof data.data.memory.rssMb === 'number');
+    assert.ok(typeof data.data.database === 'object');
+    assert.ok(typeof data.data.database.status === 'string');
+    assert.ok(typeof data.data.database.readyState === 'number');
   });
 
   test('GET /api/v1/health should return 200 and matching health schema', async () => {
@@ -56,6 +59,8 @@ describe('Express Application & Health API Test Suite', () => {
     assert.strictEqual(res.status, 200);
     assert.strictEqual(data.success, true);
     assert.strictEqual(data.data.status, 'UP');
+    assert.ok(typeof data.data.database === 'object');
+    assert.ok(typeof data.data.database.status === 'string');
   });
 
   test('GET /undefined-route should return 404 with structured error response', async () => {

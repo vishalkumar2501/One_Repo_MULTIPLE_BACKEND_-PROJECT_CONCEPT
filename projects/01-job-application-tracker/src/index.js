@@ -1,6 +1,7 @@
 const http = require('http');
 const app = require('./app');
 const config = require('./config/env');
+const { connectDB, disconnectDB } = require('./config/db');
 
 let server;
 
@@ -9,23 +10,39 @@ let server;
  * @param {http.Server} httpServer
  */
 function setupGracefulShutdown(httpServer) {
-  const shutdown = (signal) => {
+  let isShuttingDown = false;
+
+  const shutdown = async (signal) => {
+    if (isShuttingDown) return;
+    isShuttingDown = true;
+
     console.log(`\n[Server] Received ${signal}. Initiating graceful shutdown...`);
 
-    httpServer.close((err) => {
-      if (err) {
-        console.error('[Server] Error during HTTP server close:', err);
-        process.exit(1);
-      }
-      console.log('[Server] HTTP server closed gracefully. Exiting process.');
-      process.exit(0);
-    });
-
-    // Enforce shutdown after 10-second timeout if connections remain open
-    setTimeout(() => {
+    // Enforce shutdown after 10-second timeout if closing hangs
+    const forceExitTimeout = setTimeout(() => {
       console.error('[Server] Forcing shutdown after timeout (10s).');
       process.exit(1);
-    }, 10000).unref();
+    }, 10000);
+    forceExitTimeout.unref();
+
+    try {
+      if (httpServer && httpServer.listening) {
+        await new Promise((resolve, reject) => {
+          httpServer.close((err) => {
+            if (err) return reject(err);
+            console.log('[Server] HTTP server closed.');
+            resolve();
+          });
+        });
+      }
+
+      await disconnectDB();
+      console.log('[Server] Graceful shutdown completed successfully. Exiting.');
+      process.exit(0);
+    } catch (err) {
+      console.error('[Server] Error during graceful shutdown:', err);
+      process.exit(1);
+    }
   };
 
   process.on('SIGINT', () => shutdown('SIGINT'));
@@ -43,9 +60,20 @@ function setupGracefulShutdown(httpServer) {
 }
 
 /**
- * Bootstrap and start the Express HTTP server.
+ * Bootstrap and start the Express HTTP server with MongoDB connectivity.
  */
-function startServer() {
+async function startServer() {
+  try {
+    // Attempt database connection
+    await connectDB();
+  } catch (dbError) {
+    console.error('[Bootstrap] Database connection failed on startup:', dbError.message);
+    if (config.isProduction) {
+      console.error('[Bootstrap] Exiting process due to critical database connection failure in production.');
+      process.exit(1);
+    }
+  }
+
   server = http.createServer(app);
 
   server.listen(config.port, () => {
