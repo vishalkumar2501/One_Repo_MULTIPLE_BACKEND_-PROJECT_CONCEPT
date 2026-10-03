@@ -24,7 +24,7 @@ A multi-project repository demonstrating backend architectures, clean code princ
 ### Project 1: Job Application Tracker API (Days 1–12)
 - [x] **Day 1**: Project workspace structure, root & project package.json, base configuration, `.gitignore`, `.env.example`
 - [x] **Day 2**: Express server setup, environment config, graceful shutdown, health check endpoint
-- [ ] **Day 3**: MongoDB connection with Mongoose, connection retry logic, database event listeners
+- [x] **Day 3**: MongoDB connection with Mongoose, connection retry logic, database event listeners
 - [ ] **Day 4**: User Schema & Model with bcrypt password hashing and instance methods
 - [ ] **Day 5**: User Registration API with input validation (Joi/Zod) and duplicate checking
 - [ ] **Day 6**: User Login API with JWT token generation and credential verification

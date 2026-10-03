@@ -62,7 +62,7 @@ projects/01-job-application-tracker/
 
 - [x] **Day 1**: Project structure initialization, environment loader, base configuration.
 - [x] **Day 2**: Express server setup, graceful shutdown, health check endpoint.
-- [ ] **Day 3**: MongoDB connection with Mongoose and retry logic.
+- [x] **Day 3**: MongoDB connection with Mongoose, connection retry logic & event listeners.
 - [ ] **Day 4**: User Schema & Model with password hashing.
 - [ ] **Day 5**: User Registration API with validation.
 - [ ] **Day 6**: User Login API with JWT token generation.

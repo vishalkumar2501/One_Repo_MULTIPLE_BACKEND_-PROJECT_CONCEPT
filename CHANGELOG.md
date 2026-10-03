@@ -4,6 +4,22 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 3] - 2026-10-03
+
+### Added
+- **Project 01 (Job Application Tracker)**:
+  - Installed `mongoose` (v9.10.4) for Object Document Mapping (ODM).
+  - Implemented database connection manager (`src/config/db.js`) featuring configurable automated retry logic with exponential backoff.
+  - Configured full suite of Mongoose lifecycle event listeners (`connected`, `open`, `error`, `disconnected`, `reconnected`).
+  - Added connection state diagnostic utility (`getConnectionState()`) mapping Mongoose ready states.
+  - Implemented clean connection termination function (`disconnectDB()`) for graceful shutdown and test isolation.
+  - Integrated database connection into Express server bootstrap and graceful shutdown lifecycle (`src/index.js`).
+  - Extended `/health` and `/api/v1/health` endpoints to report real-time database connection diagnostics (`src/controllers/health.controller.js`).
+  - Created automated database unit test suite (`test/db.test.js`) verifying state inspection, retry mechanisms, and event listeners.
+  - Updated application health test suite (`test/app.test.js`) verifying database telemetry in health responses.
+
+---
+
 ## [Day 2] - 2026-10-02
 
 ### Added
