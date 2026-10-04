@@ -4,6 +4,21 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 4] - 2026-10-04
+
+### Added
+- **Project 01 (Job Application Tracker)**:
+  - Installed `bcryptjs` (v3.0.3) for cross-platform secure password hashing.
+  - Implemented User Schema & Model (`src/models/user.model.js`) with comprehensive schema validation for `name`, `email`, `password`, `role`, `isActive`, and `lastLogin`.
+  - Configured pre-save Mongoose middleware for automatic bcrypt salt generation and password hashing on creation and modification.
+  - Added security protection with `select: false` on `password` field by default.
+  - Added instance method `comparePassword(candidatePassword)` verifying candidate plaintext against stored bcrypt hashes.
+  - Added instance method `toSafeObject()` and configured `toJSON` / `toObject` transform hooks to sanitize document serialization (stripping `password` and `__v`).
+  - Added static query helpers `findByEmail(email)` and `isEmailTaken(email, excludeUserId)`.
+  - Created automated User Model unit test suite (`test/user.model.test.js`) verifying field validation, default attributes, password comparison, schema transforms, and helper methods.
+
+---
+
 ## [Day 3] - 2026-10-03
 
 ### Added
