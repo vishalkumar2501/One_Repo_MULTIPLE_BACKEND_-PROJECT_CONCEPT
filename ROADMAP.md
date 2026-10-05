@@ -26,7 +26,7 @@ A multi-project repository demonstrating backend architectures, clean code princ
 - [x] **Day 2**: Express server setup, environment config, graceful shutdown, health check endpoint
 - [x] **Day 3**: MongoDB connection with Mongoose, connection retry logic, database event listeners
 - [x] **Day 4**: User Schema & Model with bcrypt password hashing and instance methods
-- [ ] **Day 5**: User Registration API with input validation (Joi/Zod) and duplicate checking
+- [x] **Day 5**: User Registration API with input validation (Joi/Zod) and duplicate checking
 - [ ] **Day 6**: User Login API with JWT token generation and credential verification
 - [ ] **Day 7**: Authentication & Authorization middleware (JWT verification, payload extraction, error handling)
 - [ ] **Day 8**: Job Application Model & Schema with status enums, dates, company details, and user association
