@@ -4,6 +4,24 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 5] - 2026-10-05
+
+### Added
+- **Project 01 (Job Application Tracker)**:
+  - Installed `joi` (v18.2.9) for schema-based HTTP request validation.
+  - Implemented async handler utility (`src/utils/asyncHandler.js`) for clean error propagation in controllers without verbose try-catch blocks.
+  - Implemented reusable Joi request validation middleware (`src/middleware/validate.js`) supporting request `body`, `query`, and `params` with automatic field error extraction and stripping of unknown properties.
+  - Created authentication validation schemas (`src/validations/auth.validation.js`) enforcing name length (2-50), valid email format/normalization, password length (min 6), and role constraints.
+  - Implemented authentication controller (`src/controllers/auth.controller.js`) with `register` method featuring duplicate email verification using `User.isEmailTaken`, bcrypt hashing on save, and safe user payload formatting.
+  - Implemented auth routing (`src/routes/auth.routes.js`) exposing `POST /api/v1/auth/register` and mounted on Express application (`src/app.js`).
+  - Added comprehensive automated test suites:
+    - `test/asyncHandler.test.js`: Verified successful handler execution and rejected promise error passing.
+    - `test/validate.middleware.test.js`: Verified valid schema pass-through, 400 Bad Request error generation, unknown field stripping, and query/params validation.
+    - `test/auth.validation.test.js`: Verified field length limits, email normalization, password constraints, and role defaults.
+    - `test/auth.register.test.js`: Verified end-to-end user registration (201 Created), duplicate email conflict prevention (409 Conflict), and validation rejection (400 Bad Request).
+
+---
+
 ## [Day 4] - 2026-10-04
 
 ### Added
