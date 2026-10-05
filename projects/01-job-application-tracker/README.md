@@ -58,13 +58,63 @@ projects/01-job-application-tracker/
 
 ---
 
+---
+
+## 📡 API Endpoints
+
+### System & Diagnostics
+| Method | Endpoint | Description | Auth |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/` | API welcome payload and available endpoints | None |
+| `GET` | `/api/v1/health` | Service and database connection telemetry | None |
+
+### Authentication
+| Method | Endpoint | Description | Auth |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/auth/register` | Register a new user account with Joi input validation | None |
+
+#### Example: Register User (`POST /api/v1/auth/register`)
+
+**Request Body:**
+```json
+{
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com",
+  "password": "SecurePassword123",
+  "role": "user"
+}
+```
+
+**Success Response (`201 Created`):**
+```json
+{
+  "success": true,
+  "statusCode": 201,
+  "message": "User registered successfully",
+  "data": {
+    "user": {
+      "_id": "6650a2b8e3f41234567890ab",
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "role": "user",
+      "isActive": true,
+      "lastLogin": null,
+      "createdAt": "2026-10-05T06:30:00.000Z",
+      "updatedAt": "2026-10-05T06:30:00.000Z"
+    }
+  }
+}
+```
+
+---
+
 ## 📅 Roadmap for Project 01
 
 - [x] **Day 1**: Project structure initialization, environment loader, base configuration.
 - [x] **Day 2**: Express server setup, graceful shutdown, health check endpoint.
 - [x] **Day 3**: MongoDB connection with Mongoose, connection retry logic & event listeners.
 - [x] **Day 4**: User Schema & Model with password hashing.
-- [ ] **Day 5**: User Registration API with validation.
+- [x] **Day 5**: User Registration API with validation.
 - [ ] **Day 6**: User Login API with JWT token generation.
 - [ ] **Day 7**: JWT Authentication & Authorization middleware.
 - [ ] **Day 8**: Job Application Schema & Model.
