@@ -160,4 +160,15 @@ describe('User Model & Schema Unit Tests', () => {
     assert.strictEqual(User.findByEmail(''), null);
     assert.strictEqual(User.findByEmail(123), null);
   });
+
+  test('generateAuthToken should generate a valid JWT with user payload', () => {
+    const user = new User({
+      _id: new mongoose.Types.ObjectId('6650a2b8e3f41234567890cd'),
+      ...validUserData
+    });
+
+    const token = user.generateAuthToken();
+    assert.ok(typeof token === 'string');
+    assert.strictEqual(token.split('.').length, 3);
+  });
 });

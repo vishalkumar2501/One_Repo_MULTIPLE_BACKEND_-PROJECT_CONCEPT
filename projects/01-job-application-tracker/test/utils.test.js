@@ -49,6 +49,13 @@ describe('Utils Test Suite (ApiError & ApiResponse)', () => {
     assert.strictEqual(capturedJson.message, 'Fetched successfully');
     assert.deepStrictEqual(capturedJson.data, { item: 'sample' });
 
+    ApiResponse.ok(mockRes, { item: 'sample-ok' }, 'OK status');
+    assert.strictEqual(capturedStatus, 200);
+    assert.strictEqual(capturedJson.success, true);
+    assert.strictEqual(capturedJson.statusCode, 200);
+    assert.strictEqual(capturedJson.message, 'OK status');
+    assert.deepStrictEqual(capturedJson.data, { item: 'sample-ok' });
+
     ApiResponse.created(mockRes, { id: 1 }, 'Created');
     assert.strictEqual(capturedStatus, 201);
     assert.strictEqual(capturedJson.success, true);

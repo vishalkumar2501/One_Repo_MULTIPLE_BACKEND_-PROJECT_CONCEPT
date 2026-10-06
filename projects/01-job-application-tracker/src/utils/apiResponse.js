@@ -18,6 +18,10 @@ class ApiResponse {
     return res.status(statusCode).json(new ApiResponse(statusCode, data, message));
   }
 
+  static ok(res, data = null, message = 'Success') {
+    return this.success(res, data, message, 200);
+  }
+
   static created(res, data = null, message = 'Resource created successfully') {
     return res.status(201).json(new ApiResponse(201, data, message));
   }
