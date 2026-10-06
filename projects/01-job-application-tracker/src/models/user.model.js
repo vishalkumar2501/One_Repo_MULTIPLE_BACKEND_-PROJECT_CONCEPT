@@ -109,6 +109,24 @@ userSchema.methods.toSafeObject = function () {
 };
 
 /**
+ * Instance method: Generate a signed JWT authentication token for the user.
+ * @param {Object} [additionalPayload={}] - Optional additional claims
+ * @param {Object} [options={}] - Optional jwt sign options
+ * @returns {string} Signed JWT token string
+ */
+userSchema.methods.generateAuthToken = function (additionalPayload = {}, options = {}) {
+  // Lazy require to avoid circular dependencies if any
+  const { generateToken } = require('../utils/token');
+  const payload = {
+    id: this._id ? this._id.toString() : undefined,
+    email: this.email,
+    role: this.role,
+    ...additionalPayload
+  };
+  return generateToken(payload, options);
+};
+
+/**
  * Static method: Find user by normalized email address.
  * @param {string} email - Email address to search
  * @returns {Query} Mongoose query resolving to user document or null

@@ -1,6 +1,6 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert');
-const { registerSchema } = require('../src/validations/auth.validation');
+const { registerSchema, loginSchema } = require('../src/validations/auth.validation');
 
 describe('Auth Validation Schemas Unit Tests', () => {
   const validRegisterData = {
@@ -56,7 +56,7 @@ describe('Auth Validation Schemas Unit Tests', () => {
     assert.strictEqual(value.email, 'jane.doe@example.com');
   });
 
-  test('should enforce minimum password length of 6 characters', () => {
+  test('should enforce minimum password length of 6 characters for registration', () => {
     const result = registerSchema.body.validate({
       ...validRegisterData,
       password: '12345'
@@ -86,5 +86,38 @@ describe('Auth Validation Schemas Unit Tests', () => {
       role: 'moderator'
     });
     assert.ok(invalidRoleResult.error);
+  });
+
+  describe('loginSchema Validation Tests', () => {
+    test('should validate valid login body and normalize email', () => {
+      const { error, value } = loginSchema.body.validate({
+        email: '  USER@Example.COM  ',
+        password: 'anyPassword123'
+      });
+
+      assert.strictEqual(error, undefined);
+      assert.strictEqual(value.email, 'user@example.com');
+      assert.strictEqual(value.password, 'anyPassword123');
+    });
+
+    test('should fail login validation when email is missing or invalid format', () => {
+      const missingEmail = loginSchema.body.validate({ password: '123' });
+      assert.ok(missingEmail.error);
+      assert.strictEqual(missingEmail.error.details[0].path[0], 'email');
+
+      const invalidEmail = loginSchema.body.validate({ email: 'bad-email', password: '123' });
+      assert.ok(invalidEmail.error);
+      assert.strictEqual(invalidEmail.error.details[0].path[0], 'email');
+    });
+
+    test('should fail login validation when password is empty or missing', () => {
+      const missingPass = loginSchema.body.validate({ email: 'user@example.com' });
+      assert.ok(missingPass.error);
+      assert.strictEqual(missingPass.error.details[0].path[0], 'password');
+
+      const emptyPass = loginSchema.body.validate({ email: 'user@example.com', password: '' });
+      assert.ok(emptyPass.error);
+      assert.strictEqual(emptyPass.error.details[0].path[0], 'password');
+    });
   });
 });

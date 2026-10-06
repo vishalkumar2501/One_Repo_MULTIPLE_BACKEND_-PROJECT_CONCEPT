@@ -48,6 +48,33 @@ const registerSchema = {
   })
 };
 
+/**
+ * Validation schema for user login endpoint.
+ */
+const loginSchema = {
+  body: Joi.object({
+    email: Joi.string()
+      .trim()
+      .email({ tlds: { allow: false } })
+      .lowercase()
+      .required()
+      .messages({
+        'string.base': 'Email must be a string',
+        'string.empty': 'Email cannot be empty',
+        'string.email': 'Please provide a valid email address',
+        'any.required': 'Email is required'
+      }),
+    password: Joi.string()
+      .required()
+      .messages({
+        'string.base': 'Password must be a string',
+        'string.empty': 'Password cannot be empty',
+        'any.required': 'Password is required'
+      })
+  })
+};
+
 module.exports = {
-  registerSchema
+  registerSchema,
+  loginSchema
 };
