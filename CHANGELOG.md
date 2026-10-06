@@ -4,6 +4,31 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 6] - 2026-10-06
+
+### Added
+- **Project 01 (Job Application Tracker)**:
+  - Installed `jsonwebtoken` for secure JWT generation, verification, and decoding.
+  - Implemented JWT token utility (`src/utils/token.js`) with `generateToken`, `verifyToken` (with specific handling for token expiration and malformed signatures), and `decodeToken`.
+  - Added `generateAuthToken` instance method to User model (`src/models/user.model.js`) to generate signed authentication tokens with user claims (`id`, `email`, `role`).
+  - Added `ApiResponse.ok(res, data, message)` helper to `src/utils/apiResponse.js`.
+  - Implemented login validation schema (`loginSchema` in `src/validations/auth.validation.js`) enforcing valid email format/normalization and password presence.
+  - Implemented user login controller (`login` in `src/controllers/auth.controller.js`) with:
+    - User lookup by email with explicit password selection (`.select('+password')`).
+    - Timing-safe bcrypt password comparison (`user.comparePassword`).
+    - Account deactivation check (`isActive`).
+    - JWT auth token generation and Bearer token response.
+    - Automated `lastLogin` timestamp update upon authentication.
+  - Added `POST /api/v1/auth/login` route in `src/routes/auth.routes.js`.
+  - Added automated test suites:
+    - `test/token.test.js`: Verified JWT generation, valid payload verification, expiration error handling, invalid signature detection, decoding, and User model token generation.
+    - `test/auth.login.test.js`: Verified 200 OK login flow with token creation and `lastLogin` tracking, 401 Unauthorized for non-existent users and bad passwords, 403 Forbidden for deactivated accounts, and 400 Bad Request for validation errors.
+    - Updated `test/auth.validation.test.js` to cover login schema validations.
+    - Updated `test/user.model.test.js` to verify `generateAuthToken` method.
+    - Updated `test/utils.test.js` to verify `ApiResponse.ok`.
+
+---
+
 ## [Day 5] - 2026-10-05
 
 ### Added
