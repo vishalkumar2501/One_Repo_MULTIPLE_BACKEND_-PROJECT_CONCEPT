@@ -72,6 +72,7 @@ projects/01-job-application-tracker/
 | Method | Endpoint | Description | Auth |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/v1/auth/register` | Register a new user account with Joi input validation | None |
+| `POST` | `/api/v1/auth/login` | Authenticate user credentials and receive JWT access token | None |
 
 #### Example: Register User (`POST /api/v1/auth/register`)
 
@@ -106,6 +107,40 @@ projects/01-job-application-tracker/
 }
 ```
 
+#### Example: Login User (`POST /api/v1/auth/login`)
+
+**Request Body:**
+```json
+{
+  "email": "jane.doe@example.com",
+  "password": "SecurePassword123"
+}
+```
+
+**Success Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "User logged in successfully",
+  "data": {
+    "user": {
+      "_id": "6650a2b8e3f41234567890ab",
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "role": "user",
+      "isActive": true,
+      "lastLogin": "2026-10-06T04:40:00.000Z",
+      "createdAt": "2026-10-05T06:30:00.000Z",
+      "updatedAt": "2026-10-06T04:40:00.000Z"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "tokenType": "Bearer",
+    "expiresIn": "7d"
+  }
+}
+```
+
 ---
 
 ## 📅 Roadmap for Project 01
@@ -115,7 +150,7 @@ projects/01-job-application-tracker/
 - [x] **Day 3**: MongoDB connection with Mongoose, connection retry logic & event listeners.
 - [x] **Day 4**: User Schema & Model with password hashing.
 - [x] **Day 5**: User Registration API with validation.
-- [ ] **Day 6**: User Login API with JWT token generation.
+- [x] **Day 6**: User Login API with JWT token generation.
 - [ ] **Day 7**: JWT Authentication & Authorization middleware.
 - [ ] **Day 8**: Job Application Schema & Model.
 - [ ] **Day 9**: Job Application CRUD (Create & Read).
