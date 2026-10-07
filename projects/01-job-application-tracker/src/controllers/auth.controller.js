@@ -83,6 +83,23 @@ const authController = {
       },
       'User logged in successfully'
     );
+  }),
+
+  /**
+   * Get currently authenticated user profile.
+   *
+   * @route GET /api/v1/auth/me
+   * @access Private (Protected)
+   */
+  getMe: asyncHandler(async (req, res) => {
+    // req.user is populated by authenticate middleware
+    return ApiResponse.ok(
+      res,
+      {
+        user: req.user.toSafeObject()
+      },
+      'User profile retrieved successfully'
+    );
   })
 };
 

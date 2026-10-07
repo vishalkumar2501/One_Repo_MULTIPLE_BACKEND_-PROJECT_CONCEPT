@@ -31,7 +31,9 @@ app.get('/', (req, res) => {
       endpoints: {
         health: '/api/v1/health',
         apiRoot: '/api/v1',
-        authRegister: '/api/v1/auth/register'
+        authRegister: '/api/v1/auth/register',
+        authLogin: '/api/v1/auth/login',
+        authMe: '/api/v1/auth/me'
       }
     },
     'Welcome to Job Application Tracker API'

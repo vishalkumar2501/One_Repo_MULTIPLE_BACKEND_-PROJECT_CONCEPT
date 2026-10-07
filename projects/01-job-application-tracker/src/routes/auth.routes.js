@@ -1,6 +1,7 @@
 const express = require('express');
 const authController = require('../controllers/auth.controller');
 const validate = require('../middleware/validate');
+const { authenticate } = require('../middleware/auth');
 const { registerSchema, loginSchema } = require('../validations/auth.validation');
 
 const router = express.Router();
@@ -18,5 +19,12 @@ router.post('/register', validate(registerSchema), authController.register);
  * @access  Public
  */
 router.post('/login', validate(loginSchema), authController.login);
+
+/**
+ * @route   GET /api/v1/auth/me
+ * @desc    Get currently authenticated user profile
+ * @access  Private (Requires Bearer JWT token)
+ */
+router.get('/me', authenticate, authController.getMe);
 
 module.exports = router;
