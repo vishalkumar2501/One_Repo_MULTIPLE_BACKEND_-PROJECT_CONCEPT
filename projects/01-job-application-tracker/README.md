@@ -7,6 +7,7 @@ A RESTful backend service allowing job seekers to manage, organize, and monitor 
 ## 📌 Features & Architecture
 
 - **User Authentication**: Secure registration and login using bcrypt password hashing and JWT token issuance.
+- **Authentication & RBAC Middleware**: JWT Bearer token verification, payload extraction, account state checks, role-based authorization (`admin`, `user`), and optional authentication support.
 - **Job Application Management**: CRUD operations for job applications with individual user data isolation.
 - **Pipeline Status Tracking**: Status tracking across stages: `APPLIED`, `INTERVIEWING`, `OFFERED`, `REJECTED`, `WITHDRAWN`.
 - **Advanced Query Engine**: Full-text searching on company/position, filtering by application status and job type (Remote, Hybrid, Onsite), with robust pagination and sorting.
@@ -21,16 +22,16 @@ projects/01-job-application-tracker/
 ├── .env.example
 ├── package.json
 ├── README.md
-└── src/
-    ├── config/         # Environment and Database configuration
-    ├── controllers/    # Request handlers
-    ├── middleware/     # Auth, validation, and error middlewares
-    ├── models/         # Mongoose schemas & models
-    ├── routes/         # Express route definitions
-    ├── services/       # Business logic layer
-    ├── utils/          # Helper utilities & custom error classes
-    ├── app.js          # Express app setup & middleware pipeline
-    └── index.js        # Server bootstrap entry point
+├── src/
+│   ├── config/         # Environment and Database configuration
+│   ├── controllers/    # Request handlers (auth, health, applications)
+│   ├── middleware/     # Auth, RBAC, Joi validation, 404 & centralized error handlers
+│   ├── models/         # Mongoose schemas & models (User, Application)
+│   ├── routes/         # Express route definitions
+│   ├── utils/          # Token helpers, API response & custom error classes
+│   ├── app.js          # Express app setup & middleware pipeline
+│   └── index.js        # Server bootstrap entry point
+└── test/               # Node.js built-in automated test suites
 ```
 
 ---
@@ -56,7 +57,10 @@ projects/01-job-application-tracker/
    npm start
    ```
 
----
+4. **Run Automated Tests**:
+   ```bash
+   npm test
+   ```
 
 ---
 
@@ -68,11 +72,12 @@ projects/01-job-application-tracker/
 | `GET` | `/` | API welcome payload and available endpoints | None |
 | `GET` | `/api/v1/health` | Service and database connection telemetry | None |
 
-### Authentication
+### Authentication & Profile
 | Method | Endpoint | Description | Auth |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/v1/auth/register` | Register a new user account with Joi input validation | None |
 | `POST` | `/api/v1/auth/login` | Authenticate user credentials and receive JWT access token | None |
+| `GET` | `/api/v1/auth/me` | Retrieve currently authenticated user profile | Bearer Token (`authenticate`) |
 
 #### Example: Register User (`POST /api/v1/auth/register`)
 
@@ -141,6 +146,43 @@ projects/01-job-application-tracker/
 }
 ```
 
+#### Example: Get Current User Profile (`GET /api/v1/auth/me`)
+
+**Request Headers:**
+```http
+Authorization: Bearer <your_jwt_access_token>
+```
+
+**Success Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "User profile retrieved successfully",
+  "data": {
+    "user": {
+      "_id": "6650a2b8e3f41234567890ab",
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "role": "user",
+      "isActive": true,
+      "lastLogin": "2026-10-06T04:40:00.000Z",
+      "createdAt": "2026-10-05T06:30:00.000Z",
+      "updatedAt": "2026-10-06T04:40:00.000Z"
+    }
+  }
+}
+```
+
+---
+
+## 🔒 Security & Middleware
+
+- **`authenticate` / `protect`**: Enforces valid `Bearer <token>` in `Authorization` header, verifies signature & expiration, and queries active user context attaching `req.user` & `req.token`.
+- **`authorize(...roles)` / `restrictTo(...roles)`**: Role-based access control checking `req.user.role` against authorized roles (e.g. `'admin'`, `'user'`), throwing `403 Forbidden` if unauthorized.
+- **`optionalAuth`**: Gracefully attaches user if valid token present without rejecting unauthenticated requests.
+- **`validate(schema)`**: Request schema validator powered by Joi for `body`, `query`, and `params`.
+
 ---
 
 ## 📅 Roadmap for Project 01
@@ -151,7 +193,7 @@ projects/01-job-application-tracker/
 - [x] **Day 4**: User Schema & Model with password hashing.
 - [x] **Day 5**: User Registration API with validation.
 - [x] **Day 6**: User Login API with JWT token generation.
-- [ ] **Day 7**: JWT Authentication & Authorization middleware.
+- [x] **Day 7**: JWT Authentication & Authorization middleware.
 - [ ] **Day 8**: Job Application Schema & Model.
 - [ ] **Day 9**: Job Application CRUD (Create & Read).
 - [ ] **Day 10**: Job Application CRUD (Update & Delete with ownership security).

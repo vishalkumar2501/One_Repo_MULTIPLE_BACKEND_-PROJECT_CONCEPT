@@ -4,6 +4,31 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 7] - 2026-10-07
+
+### Added
+- **Project 01 (Job Application Tracker)**:
+  - Implemented Authentication middleware (`authenticate` / `protect` in `src/middleware/auth.js`):
+    - Bearer JWT token extraction from `Authorization` HTTP header.
+    - Signature, expiration, and malformed structure verification using `verifyToken`.
+    - User document retrieval by decoded ID from MongoDB.
+    - Deactivated user account check (`isActive`).
+    - Attachment of authenticated `req.user`, `req.token`, and `req.auth` context to Express request.
+  - Implemented Role-Based Authorization middleware generator (`authorize` / `restrictTo` in `src/middleware/auth.js`):
+    - Validates user role against allowed roles (`admin`, `user`).
+    - Throws structured `403 Forbidden` error on unauthorized access attempts.
+  - Implemented Optional Authentication middleware (`optionalAuth` in `src/middleware/auth.js`):
+    - Gracefully populates `req.user` if valid Bearer token exists without rejecting unauthenticated requests.
+  - Added current user profile controller (`getMe` in `src/controllers/auth.controller.js`) returning safe user object.
+  - Added protected route `GET /api/v1/auth/me` with Bearer authentication in `src/routes/auth.routes.js`.
+  - Updated root welcome route in `src/app.js` with `authMe` endpoint metadata.
+  - Added comprehensive automated test suites:
+    - `test/auth.middleware.test.js`: 19 unit tests covering missing headers, malformed Bearer schemes, expired/invalid tokens, missing payloads, deleted users, deactivated accounts, valid authentication flow, role-based authorization, and optional authentication.
+    - `test/auth.me.test.js`: 5 integration tests covering 200 OK profile retrieval, 401 Unauthorized missing/invalid token handling, deleted user token handling, and 403 Forbidden deactivated account handling.
+  - Updated project documentation in `projects/01-job-application-tracker/README.md` and marked Day 7 complete in `ROADMAP.md`.
+
+---
+
 ## [Day 6] - 2026-10-06
 
 ### Added
