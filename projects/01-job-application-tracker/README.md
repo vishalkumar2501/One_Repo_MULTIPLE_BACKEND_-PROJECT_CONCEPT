@@ -185,6 +185,26 @@ Authorization: Bearer <your_jwt_access_token>
 
 ---
 
+## 🗄️ Application Data Model & Lifecycle
+
+The Job Application entity (`src/models/application.model.js`) is designed for multi-tenant isolation with indexes for fast retrieval:
+
+| Field | Type | Details |
+| :--- | :--- | :--- |
+| `user` | `ObjectId` (Ref: `User`) | Foreign key linking application to authenticated user (`required`, indexed) |
+| `company` | `String` | Company name (`required`, length: 2–100, text indexed) |
+| `position` | `String` | Role title (`required`, length: 2–100, text indexed) |
+| `jobType` | `String` (Enum) | `full-time`, `part-time`, `contract`, `internship`, `freelance` |
+| `workLocation` | `String` (Enum) | `remote`, `hybrid`, `onsite` |
+| `status` | `String` (Enum) | `applied`, `interviewing`, `offered`, `rejected`, `withdrawn` |
+| `salary` | `Object` | Range (`min`, `max`), `currency` (3-char ISO code), and `period` (`yearly`, `monthly`, `hourly`) |
+| `applicationDate`| `Date` | Date applied (defaults to `Date.now`) |
+| `interviewStages`| `Array` | Subdocument array (`stageName`, `stageDate`, `interviewer`, `status`, `feedback`) |
+| `priority` | `String` (Enum) | `low`, `medium`, `high` |
+| `isArchived` | `Boolean` | Soft-archiving flag (`default: false`) |
+
+---
+
 ## 📅 Roadmap for Project 01
 
 - [x] **Day 1**: Project structure initialization, environment loader, base configuration.
@@ -194,7 +214,7 @@ Authorization: Bearer <your_jwt_access_token>
 - [x] **Day 5**: User Registration API with validation.
 - [x] **Day 6**: User Login API with JWT token generation.
 - [x] **Day 7**: JWT Authentication & Authorization middleware.
-- [ ] **Day 8**: Job Application Schema & Model.
+- [x] **Day 8**: Job Application Schema & Model.
 - [ ] **Day 9**: Job Application CRUD (Create & Read).
 - [ ] **Day 10**: Job Application CRUD (Update & Delete with ownership security).
 - [ ] **Day 11**: Search, Filtering, Pagination & Sorting.
