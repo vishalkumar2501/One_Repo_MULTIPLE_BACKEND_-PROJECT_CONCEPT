@@ -4,6 +4,33 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 8] - 2026-10-08
+
+### Added
+- **Project 01 (Job Application Tracker)**:
+  - Implemented Job Application Schema & Model (`src/models/application.model.js`):
+    - Exported domain lifecycle enums: `APPLICATION_STATUS` (`applied`, `interviewing`, `offered`, `rejected`, `withdrawn`), `JOB_TYPE` (`full-time`, `part-time`, `contract`, `internship`, `freelance`), `WORK_LOCATION` (`remote`, `hybrid`, `onsite`), `APPLICATION_PRIORITY` (`low`, `medium`, `high`), `SALARY_PERIOD` (`yearly`, `monthly`, `hourly`), and `INTERVIEW_STAGE_STATUS` (`scheduled`, `completed`, `cancelled`, `passed`, `failed`).
+    - Configured multi-tenant user association (`user: ObjectId, ref: 'User'`) with dedicated indexing.
+    - Added nested `salary` subdocument with cross-field validation ensuring `min <= max`.
+    - Added embedded `interviewStages` subdocument schema with date, interviewer, stage status, and feedback tracking.
+    - Configured compound indexes (`{ user: 1, status: 1 }`, `{ user: 1, applicationDate: -1 }`, `{ user: 1, createdAt: -1 }`, `{ user: 1, isArchived: 1 }`).
+    - Configured weighted full-text search index (`company: 10`, `position: 8`, `location: 3`, `notes: 1`).
+    - Implemented instance methods: `addInterviewStage`, `updateStatus` (with conditional `rejectionReason` lifecycle handling), `archive`, and `unarchive`.
+    - Implemented static query helpers: `findByUser` and aggregation method `getStatusCountsByUser`.
+  - Implemented Joi validation schemas (`src/validations/application.validation.js`):
+    - `createApplicationSchema`: validates company, position, types, locations, salary, urls, contacts, notes, dates, and priorities.
+    - `updateApplicationSchema`: validates partial updates with minimum 1 field requirement and ObjectId verification.
+    - `applicationIdParamSchema`: validates MongoDB ObjectId URL parameters.
+    - `addInterviewStageSchema`: validates interview stage subdocument payloads.
+    - `updateStatusSchema`: validates application status transitions and rejection notes.
+    - `queryApplicationsSchema`: validates search keywords, filters, pagination bounds (limit max 100), and sorting fields.
+  - Added comprehensive automated test suites:
+    - `test/application.model.test.js`: 15 unit tests verifying model validation, required attributes, length constraints, enum guards, default values, salary rules, interview stage subdocuments, methods (`addInterviewStage`, `updateStatus`, `archive`/`unarchive`), transforms, and query helpers.
+    - `test/application.validation.test.js`: 20 unit tests covering Joi validation schemas, default assignment, rejection rules, ObjectId pattern verification, and pagination parameter bounds.
+  - Updated `ROADMAP.md` marking Day 8 completed.
+
+---
+
 ## [Day 7] - 2026-10-07
 
 ### Added
