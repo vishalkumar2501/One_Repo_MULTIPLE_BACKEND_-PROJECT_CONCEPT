@@ -4,6 +4,26 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 9] - 2026-10-10
+
+### Added
+- **Project 01 (Job Application Tracker)**:
+  - Implemented Job Application Controller (`src/controllers/application.controller.js`):
+    - `createApplication`: creates application document directly linked to authenticated user ID (`req.user._id`), returning 201 Created with standardized payload.
+    - `getApplications`: retrieves applications for authenticated user with strict user isolation, supporting full-text search (`$text`), attribute filters (`status`, `jobType`, `workLocation`, `priority`, `isArchived`), customizable sorting, and pagination metadata (`total`, `page`, `limit`, `totalPages`, `hasNextPage`, `hasPrevPage`).
+    - `getApplicationById`: fetches single application by ID with multi-tenant ownership verification, throwing 404 Not Found when attempting to access applications belonging to other users.
+  - Implemented Job Application Routes (`src/routes/application.routes.js`):
+    - Enforced `authenticate` JWT middleware across all application endpoints.
+    - Configured `POST /api/v1/applications` with `createApplicationSchema` validation.
+    - Configured `GET /api/v1/applications` with `queryApplicationsSchema` validation.
+    - Configured `GET /api/v1/applications/:id` with `applicationIdParamSchema` validation.
+  - Integrated application routing into Express application pipeline (`src/app.js`) at `/api/v1/applications` and exposed in root `/` API directory.
+  - Added comprehensive automated integration test suite (`test/application.api.test.js`):
+    - 14 tests verifying application creation (201 Created), validation rejection on required fields and negative salary (400 Bad Request), authentication enforcement (401 Unauthorized), listing with pagination bounds and filters, strict user isolation across multi-user environments, single item retrieval (200 OK), non-existent and cross-user isolation 404 responses, and malformed ObjectId parameter validation (400 Bad Request).
+  - Updated Project 01 README documentation and marked Day 9 complete in `ROADMAP.md`.
+
+---
+
 ## [Day 8] - 2026-10-08
 
 ### Added
