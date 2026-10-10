@@ -2,6 +2,7 @@ const express = require('express');
 const config = require('./config/env');
 const healthRoutes = require('./routes/health.routes');
 const authRoutes = require('./routes/auth.routes');
+const applicationRoutes = require('./routes/application.routes');
 const notFoundHandler = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
 const ApiResponse = require('./utils/apiResponse');
@@ -33,7 +34,8 @@ app.get('/', (req, res) => {
         apiRoot: '/api/v1',
         authRegister: '/api/v1/auth/register',
         authLogin: '/api/v1/auth/login',
-        authMe: '/api/v1/auth/me'
+        authMe: '/api/v1/auth/me',
+        applications: '/api/v1/applications'
       }
     },
     'Welcome to Job Application Tracker API'
@@ -46,6 +48,9 @@ app.use('/api/v1/health', healthRoutes);
 
 // Authentication endpoints
 app.use('/api/v1/auth', authRoutes);
+
+// Job Application endpoints
+app.use('/api/v1/applications', applicationRoutes);
 
 // Catch unhandled routes (404)
 app.use(notFoundHandler);
