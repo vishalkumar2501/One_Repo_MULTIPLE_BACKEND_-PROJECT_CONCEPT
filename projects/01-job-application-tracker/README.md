@@ -174,6 +174,109 @@ Authorization: Bearer <your_jwt_access_token>
 }
 ```
 
+### Job Applications Management
+| Method | Endpoint | Description | Auth |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/applications` | Create a new job application linked to authenticated user | Bearer Token (`authenticate`) |
+| `GET` | `/api/v1/applications` | List applications with pagination, sorting, and filters | Bearer Token (`authenticate`) |
+| `GET` | `/api/v1/applications/:id` | Get single application by ID with strict user isolation | Bearer Token (`authenticate`) |
+
+#### Example: Create Job Application (`POST /api/v1/applications`)
+
+**Request Headers:**
+```http
+Authorization: Bearer <your_jwt_access_token>
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "company": "Stripe",
+  "position": "Backend Software Engineer",
+  "jobType": "full-time",
+  "workLocation": "remote",
+  "status": "applied",
+  "priority": "high",
+  "salary": {
+    "min": 140000,
+    "max": 180000,
+    "currency": "USD",
+    "period": "yearly"
+  },
+  "notes": "Applied via referral link on company careers portal"
+}
+```
+
+**Success Response (`201 Created`):**
+```json
+{
+  "success": true,
+  "statusCode": 201,
+  "message": "Job application created successfully",
+  "data": {
+    "application": {
+      "_id": "6650a2b8e3f41234567890c1",
+      "user": "6650a2b8e3f41234567890ab",
+      "company": "Stripe",
+      "position": "Backend Software Engineer",
+      "jobType": "full-time",
+      "workLocation": "remote",
+      "location": "",
+      "status": "applied",
+      "salary": {
+        "min": 140000,
+        "max": 180000,
+        "currency": "USD",
+        "period": "yearly"
+      },
+      "priority": "high",
+      "isArchived": false,
+      "interviewStages": [],
+      "createdAt": "2026-10-10T06:00:00.000Z",
+      "updatedAt": "2026-10-10T06:00:00.000Z"
+    }
+  }
+}
+```
+
+#### Example: List Job Applications (`GET /api/v1/applications?status=applied&limit=10&page=1`)
+
+**Request Headers:**
+```http
+Authorization: Bearer <your_jwt_access_token>
+```
+
+**Success Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Job applications retrieved successfully",
+  "data": {
+    "applications": [
+      {
+        "_id": "6650a2b8e3f41234567890c1",
+        "company": "Stripe",
+        "position": "Backend Software Engineer",
+        "status": "applied",
+        "workLocation": "remote",
+        "priority": "high",
+        "createdAt": "2026-10-10T06:00:00.000Z"
+      }
+    ],
+    "pagination": {
+      "total": 1,
+      "page": 1,
+      "limit": 10,
+      "totalPages": 1,
+      "hasNextPage": false,
+      "hasPrevPage": false
+    }
+  }
+}
+```
+
 ---
 
 ## 🔒 Security & Middleware
@@ -182,6 +285,7 @@ Authorization: Bearer <your_jwt_access_token>
 - **`authorize(...roles)` / `restrictTo(...roles)`**: Role-based access control checking `req.user.role` against authorized roles (e.g. `'admin'`, `'user'`), throwing `403 Forbidden` if unauthorized.
 - **`optionalAuth`**: Gracefully attaches user if valid token present without rejecting unauthenticated requests.
 - **`validate(schema)`**: Request schema validator powered by Joi for `body`, `query`, and `params`.
+- **Multi-tenant User Isolation**: Job application records are partitioned strictly by `req.user._id`, preventing unauthorized cross-user reads or updates.
 
 ---
 
@@ -215,7 +319,7 @@ The Job Application entity (`src/models/application.model.js`) is designed for m
 - [x] **Day 6**: User Login API with JWT token generation.
 - [x] **Day 7**: JWT Authentication & Authorization middleware.
 - [x] **Day 8**: Job Application Schema & Model.
-- [ ] **Day 9**: Job Application CRUD (Create & Read).
+- [x] **Day 9**: Job Application CRUD (Create & Read with User Isolation).
 - [ ] **Day 10**: Job Application CRUD (Update & Delete with ownership security).
 - [ ] **Day 11**: Search, Filtering, Pagination & Sorting.
 - [ ] **Day 12**: Analytics endpoints, test suites & API documentation.

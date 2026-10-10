@@ -30,7 +30,7 @@ A multi-project repository demonstrating backend architectures, clean code princ
 - [x] **Day 6**: User Login API with JWT token generation and credential verification
 - [x] **Day 7**: Authentication & Authorization middleware (JWT verification, payload extraction, error handling)
 - [x] **Day 8**: Job Application Model & Schema with status enums, dates, company details, and user association
-- [ ] **Day 9**: Job Application CRUD Controllers & Routes (Create, Read One, Read All with User Isolation)
+- [x] **Day 9**: Job Application CRUD Controllers & Routes (Create, Read One, Read All with User Isolation)
 - [ ] **Day 10**: Job Application Update & Delete with ownership security checks
 - [ ] **Day 11**: Advanced Querying: Filtering by status/job type, Search by title/company, Pagination & Sorting
 - [ ] **Day 12**: Application Analytics (status breakdown, count aggregations), comprehensive testing & documentation
