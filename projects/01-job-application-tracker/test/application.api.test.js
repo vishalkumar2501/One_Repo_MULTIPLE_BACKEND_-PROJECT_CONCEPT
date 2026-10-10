@@ -157,7 +157,8 @@ describe('Job Application (Create & Read) API Integration Test Suite', () => {
 
       assert.strictEqual(res.status, 400);
       assert.strictEqual(body.success, false);
-      assert.ok(body.message.includes('Validation error'));
+      assert.strictEqual(body.message, 'Validation failed');
+      assert.ok(Array.isArray(body.details));
     });
 
     test('should reject request when position is missing (400 Bad Request)', async () => {
@@ -176,7 +177,8 @@ describe('Job Application (Create & Read) API Integration Test Suite', () => {
 
       assert.strictEqual(res.status, 400);
       assert.strictEqual(body.success, false);
-      assert.ok(body.message.includes('Validation error'));
+      assert.strictEqual(body.message, 'Validation failed');
+      assert.ok(Array.isArray(body.details));
     });
 
     test('should reject request when salary minimum is negative (400 Bad Request)', async () => {
@@ -199,7 +201,8 @@ describe('Job Application (Create & Read) API Integration Test Suite', () => {
 
       assert.strictEqual(res.status, 400);
       assert.strictEqual(body.success, false);
-      assert.ok(body.message.includes('Validation error'));
+      assert.strictEqual(body.message, 'Validation failed');
+      assert.ok(Array.isArray(body.details));
     });
 
     test('should return 401 Unauthorized when Authorization header is absent', async () => {
@@ -347,7 +350,8 @@ describe('Job Application (Create & Read) API Integration Test Suite', () => {
 
       assert.strictEqual(res.status, 400);
       assert.strictEqual(body.success, false);
-      assert.ok(body.message.includes('Validation error'));
+      assert.strictEqual(body.message, 'Validation failed');
+      assert.ok(Array.isArray(body.details));
     });
 
     test('should return 401 Unauthorized for unauthenticated GET /applications', async () => {
@@ -454,7 +458,8 @@ describe('Job Application (Create & Read) API Integration Test Suite', () => {
 
       assert.strictEqual(res.status, 400);
       assert.strictEqual(body.success, false);
-      assert.ok(body.message.includes('Validation error'));
+      assert.strictEqual(body.message, 'Validation failed');
+      assert.ok(Array.isArray(body.details));
     });
 
     test('should return 401 Unauthorized when requesting single application without token', async () => {
