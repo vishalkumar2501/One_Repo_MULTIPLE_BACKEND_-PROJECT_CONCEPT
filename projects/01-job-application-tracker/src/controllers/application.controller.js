@@ -127,6 +127,194 @@ const applicationController = {
       { application },
       'Job application retrieved successfully'
     );
+  }),
+
+  /**
+   * Update an existing job application by ID ensuring strict user ownership.
+   *
+   * @route PUT /api/v1/applications/:id
+   * @route PATCH /api/v1/applications/:id
+   * @access Private
+   */
+  updateApplication: asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const application = await Application.findOne({
+      _id: id,
+      user: req.user._id
+    });
+
+    if (!application) {
+      throw ApiError.notFound('Job application not found');
+    }
+
+    // Apply partial updates while preserving nested subdocument integrity
+    for (const [key, value] of Object.entries(req.body)) {
+      if (key === 'salary' && typeof value === 'object' && value !== null) {
+        const existingSalary = application.salary && application.salary.toObject
+          ? application.salary.toObject()
+          : (application.salary || {});
+        application.salary = { ...existingSalary, ...value };
+      } else if (key === 'contact' && typeof value === 'object' && value !== null) {
+        const existingContact = application.contact && application.contact.toObject
+          ? application.contact.toObject()
+          : (application.contact || {});
+        application.contact = { ...existingContact, ...value };
+      } else {
+        application[key] = value;
+      }
+    }
+
+    // Lifecycle rule: clear rejectionReason if status is not 'rejected' and not explicitly provided
+    if (req.body.status && req.body.status !== 'rejected' && !('rejectionReason' in req.body)) {
+      application.rejectionReason = null;
+    }
+
+    await application.save();
+
+    return ApiResponse.ok(
+      res,
+      { application },
+      'Job application updated successfully'
+    );
+  }),
+
+  /**
+   * Delete a job application by ID ensuring strict user ownership.
+   *
+   * @route DELETE /api/v1/applications/:id
+   * @access Private
+   */
+  deleteApplication: asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const application = await Application.findOneAndDelete({
+      _id: id,
+      user: req.user._id
+    });
+
+    if (!application) {
+      throw ApiError.notFound('Job application not found');
+    }
+
+    return ApiResponse.ok(
+      res,
+      { application },
+      'Job application deleted successfully'
+    );
+  }),
+
+  /**
+   * Update application status directly with lifecycle rules.
+   *
+   * @route PATCH /api/v1/applications/:id/status
+   * @access Private
+   */
+  updateApplicationStatus: asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { status, rejectionReason } = req.body;
+
+    const application = await Application.findOne({
+      _id: id,
+      user: req.user._id
+    });
+
+    if (!application) {
+      throw ApiError.notFound('Job application not found');
+    }
+
+    application.updateStatus(status, rejectionReason);
+    await application.save();
+
+    return ApiResponse.ok(
+      res,
+      { application },
+      'Application status updated successfully'
+    );
+  }),
+
+  /**
+   * Append an interview stage to an application with automatic status transition.
+   *
+   * @route POST /api/v1/applications/:id/interview-stages
+   * @access Private
+   */
+  addInterviewStage: asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const application = await Application.findOne({
+      _id: id,
+      user: req.user._id
+    });
+
+    if (!application) {
+      throw ApiError.notFound('Job application not found');
+    }
+
+    const stage = application.addInterviewStage(req.body);
+    await application.save();
+
+    return ApiResponse.created(
+      res,
+      { application, stage },
+      'Interview stage added successfully'
+    );
+  }),
+
+  /**
+   * Soft-archive an application.
+   *
+   * @route PATCH /api/v1/applications/:id/archive
+   * @access Private
+   */
+  archiveApplication: asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const application = await Application.findOne({
+      _id: id,
+      user: req.user._id
+    });
+
+    if (!application) {
+      throw ApiError.notFound('Job application not found');
+    }
+
+    application.archive();
+    await application.save();
+
+    return ApiResponse.ok(
+      res,
+      { application },
+      'Job application archived successfully'
+    );
+  }),
+
+  /**
+   * Restore an application from archive.
+   *
+   * @route PATCH /api/v1/applications/:id/unarchive
+   * @access Private
+   */
+  unarchiveApplication: asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const application = await Application.findOne({
+      _id: id,
+      user: req.user._id
+    });
+
+    if (!application) {
+      throw ApiError.notFound('Job application not found');
+    }
+
+    application.unarchive();
+    await application.save();
+
+    return ApiResponse.ok(
+      res,
+      { application },
+      'Job application unarchived successfully'
+    );
   })
 };
 
