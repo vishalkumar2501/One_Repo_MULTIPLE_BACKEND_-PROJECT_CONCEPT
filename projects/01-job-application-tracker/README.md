@@ -180,6 +180,82 @@ Authorization: Bearer <your_jwt_access_token>
 | `POST` | `/api/v1/applications` | Create a new job application linked to authenticated user | Bearer Token (`authenticate`) |
 | `GET` | `/api/v1/applications` | List applications with pagination, sorting, and filters | Bearer Token (`authenticate`) |
 | `GET` | `/api/v1/applications/:id` | Get single application by ID with strict user isolation | Bearer Token (`authenticate`) |
+| `PUT` | `/api/v1/applications/:id` | Update all or partial fields of an application | Bearer Token (`authenticate`) |
+| `PATCH` | `/api/v1/applications/:id` | Partially update fields of an application | Bearer Token (`authenticate`) |
+| `DELETE` | `/api/v1/applications/:id` | Delete job application with strict ownership check | Bearer Token (`authenticate`) |
+| `PATCH` | `/api/v1/applications/:id/status` | Update application status with rejection lifecycle handling | Bearer Token (`authenticate`) |
+| `POST` | `/api/v1/applications/:id/interview-stages` | Append an interview stage with auto status advancement | Bearer Token (`authenticate`) |
+| `PATCH` | `/api/v1/applications/:id/archive` | Soft-archive an application | Bearer Token (`authenticate`) |
+| `PATCH` | `/api/v1/applications/:id/unarchive` | Restore an archived application | Bearer Token (`authenticate`) |
+
+#### Example: Update Job Application (`PATCH /api/v1/applications/:id`)
+
+**Request Headers:**
+```http
+Authorization: Bearer <your_jwt_access_token>
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "status": "interviewing",
+  "priority": "high",
+  "salary": {
+    "max": 185000
+  },
+  "notes": "Passed technical phone screen, scheduled for onsite loop"
+}
+```
+
+**Success Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Job application updated successfully",
+  "data": {
+    "application": {
+      "_id": "6650a2b8e3f41234567890c1",
+      "user": "6650a2b8e3f41234567890ab",
+      "company": "Stripe",
+      "position": "Backend Software Engineer",
+      "status": "interviewing",
+      "priority": "high",
+      "salary": {
+        "min": 140000,
+        "max": 185000,
+        "currency": "USD",
+        "period": "yearly"
+      },
+      "updatedAt": "2026-10-11T09:00:00.000Z"
+    }
+  }
+}
+```
+
+#### Example: Delete Job Application (`DELETE /api/v1/applications/:id`)
+
+**Request Headers:**
+```http
+Authorization: Bearer <your_jwt_access_token>
+```
+
+**Success Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Job application deleted successfully",
+  "data": {
+    "application": {
+      "_id": "6650a2b8e3f41234567890c1",
+      "company": "Stripe",
+      "position": "Backend Software Engineer"
+    }
+  }
+}
+```
 
 #### Example: Create Job Application (`POST /api/v1/applications`)
 
@@ -320,6 +396,6 @@ The Job Application entity (`src/models/application.model.js`) is designed for m
 - [x] **Day 7**: JWT Authentication & Authorization middleware.
 - [x] **Day 8**: Job Application Schema & Model.
 - [x] **Day 9**: Job Application CRUD (Create & Read with User Isolation).
-- [ ] **Day 10**: Job Application CRUD (Update & Delete with ownership security).
+- [x] **Day 10**: Job Application CRUD (Update & Delete with ownership security).
 - [ ] **Day 11**: Search, Filtering, Pagination & Sorting.
 - [ ] **Day 12**: Analytics endpoints, test suites & API documentation.
