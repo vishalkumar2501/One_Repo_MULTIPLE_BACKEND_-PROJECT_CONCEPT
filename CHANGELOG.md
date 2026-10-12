@@ -4,6 +4,30 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 10] - 2026-10-11
+
+### Added
+- **Project 01 (Job Application Tracker)**:
+  - Implemented Application Update & Delete Controllers (`src/controllers/application.controller.js`):
+    - `updateApplication`: updates existing application fields via `PUT` or `PATCH` with strict user ownership enforcement (`{ _id: id, user: req.user._id }`), deep merging of nested subdocuments (`salary`, `contact`), conditional status transition cleanup (clearing `rejectionReason` when moving to non-rejected states), and returning 200 OK.
+    - `deleteApplication`: deletes application document ensuring multi-tenant user ownership verification, throwing 404 Not Found if attempting to access another user's document, and returning 200 OK with confirmation.
+    - `updateApplicationStatus`: dedicated handler (`PATCH /api/v1/applications/:id/status`) utilizing model `updateStatus` lifecycle method to update status and record/clear rejection reason with ownership verification.
+    - `addInterviewStage`: dedicated handler (`POST /api/v1/applications/:id/interview-stages`) appending an interview stage subdocument, automatically advancing status from `applied` to `interviewing`, and returning 201 Created.
+    - `archiveApplication` and `unarchiveApplication`: dedicated handlers (`PATCH /api/v1/applications/:id/archive` & `PATCH /api/v1/applications/:id/unarchive`) managing soft-archive state with strict ownership verification.
+  - Implemented Application Update & Delete Routes (`src/routes/application.routes.js`):
+    - Added `PUT /api/v1/applications/:id` with `updateApplicationSchema` validation.
+    - Added `PATCH /api/v1/applications/:id` with `updateApplicationSchema` validation.
+    - Added `DELETE /api/v1/applications/:id` with `applicationIdParamSchema` validation.
+    - Added `PATCH /api/v1/applications/:id/status` with `updateStatusSchema` validation.
+    - Added `POST /api/v1/applications/:id/interview-stages` with `addInterviewStageSchema` validation.
+    - Added `PATCH /api/v1/applications/:id/archive` with `applicationIdParamSchema` validation.
+    - Added `PATCH /api/v1/applications/:id/unarchive` with `applicationIdParamSchema` validation.
+  - Added comprehensive automated integration test suite (`test/application.update-delete.api.test.js`):
+    - 22 integration tests covering PUT full updates, PATCH partial field updates, nested salary preservation, multi-tenant ownership security checks (404 Not Found on cross-user updates/deletions), empty payload rejection (`min(1)`), malformed ObjectId parameter validation, invalid enum validation, DELETE lifecycle, status transition logic with rejection reason tracking, interview stage appending with auto-advance, and archive/unarchive operations.
+  - Updated Project 01 README documentation and marked Day 10 complete in `ROADMAP.md`.
+
+---
+
 ## [Day 9] - 2026-10-10
 
 ### Added
