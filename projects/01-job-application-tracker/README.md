@@ -316,7 +316,31 @@ Content-Type: application/json
 }
 ```
 
-#### Example: List Job Applications (`GET /api/v1/applications?status=applied&limit=10&page=1`)
+#### Example: List Job Applications with Advanced Querying (`GET /api/v1/applications`)
+
+Supports multi-criteria filtering, comma-separated enums, regex/text search, date and salary range filtering, whitelisted sorting, and bidirectional pagination navigation.
+
+**Supported Query Parameters:**
+| Parameter | Type | Description | Example |
+| :--- | :--- | :--- | :--- |
+| `search` | String | Keyword search across `company`, `position`, `notes`, `location` | `?search=Engineer` |
+| `searchType` | String (`regex` \| `text`) | Substring regex matching (default) or MongoDB full-text index | `?searchType=regex` |
+| `company` | String | Filter / search by company name (case-insensitive substring) | `?company=Stripe` |
+| `position` | String | Filter / search by position title (case-insensitive substring) | `?position=Backend` |
+| `status` | String / Comma-separated | Filter by one or multiple application statuses | `?status=applied,interviewing` |
+| `jobType` | String / Comma-separated | Filter by one or multiple job types | `?jobType=full-time,contract` |
+| `workLocation` | String / Comma-separated | Filter by work locations | `?workLocation=remote,hybrid` |
+| `priority` | String / Comma-separated | Filter by priority levels | `?priority=high,medium` |
+| `isArchived` | Boolean | Filter by archived status (`true` or `false`) | `?isArchived=false` |
+| `hasFollowUp` | Boolean | Filter applications having upcoming follow-up dates | `?hasFollowUp=true` |
+| `minSalary` | Number | Filter applications where salary reaches or exceeds minimum | `?minSalary=120000` |
+| `maxSalary` | Number | Filter applications where salary falls within maximum limit | `?maxSalary=180000` |
+| `fromDate` / `startDate` | ISO Date String | Filter applications submitted on or after this date | `?fromDate=2026-01-01T00:00:00.000Z` |
+| `toDate` / `endDate` | ISO Date String | Filter applications submitted on or before this date | `?toDate=2026-06-30T23:59:59.999Z` |
+| `sortBy` | String | Sort field (`createdAt`, `updatedAt`, `applicationDate`, `company`, `position`, `priority`, `status`, `salary.min`, `salary.max`, `followUpDate`) | `?sortBy=company` |
+| `sortOrder` | String (`asc` \| `desc`) | Sort direction (default: `desc`) | `?sortOrder=asc` |
+| `page` | Integer (min 1) | Page number (default: `1`) | `?page=2` |
+| `limit` | Integer (1–100) | Items per page (default: `10`) | `?limit=20` |
 
 **Request Headers:**
 ```http
@@ -342,12 +366,14 @@ Authorization: Bearer <your_jwt_access_token>
       }
     ],
     "pagination": {
-      "total": 1,
-      "page": 1,
+      "total": 45,
+      "page": 2,
       "limit": 10,
-      "totalPages": 1,
-      "hasNextPage": false,
-      "hasPrevPage": false
+      "totalPages": 5,
+      "hasNextPage": true,
+      "hasPrevPage": true,
+      "nextPage": 3,
+      "prevPage": 1
     }
   }
 }
@@ -361,7 +387,8 @@ Authorization: Bearer <your_jwt_access_token>
 - **`authorize(...roles)` / `restrictTo(...roles)`**: Role-based access control checking `req.user.role` against authorized roles (e.g. `'admin'`, `'user'`), throwing `403 Forbidden` if unauthorized.
 - **`optionalAuth`**: Gracefully attaches user if valid token present without rejecting unauthenticated requests.
 - **`validate(schema)`**: Request schema validator powered by Joi for `body`, `query`, and `params`.
-- **Multi-tenant User Isolation**: Job application records are partitioned strictly by `req.user._id`, preventing unauthorized cross-user reads or updates.
+- **QueryBuilder & Safe Regex**: Automatically sanitizes search expressions using `escapeRegex` preventing ReDoS and regex injection, while restricting sorting to an audited field whitelist.
+- **Multi-tenant User Isolation**: Job application records and query filters are partitioned strictly by `req.user._id`, preventing unauthorized cross-user reads or updates.
 
 ---
 
@@ -397,5 +424,5 @@ The Job Application entity (`src/models/application.model.js`) is designed for m
 - [x] **Day 8**: Job Application Schema & Model.
 - [x] **Day 9**: Job Application CRUD (Create & Read with User Isolation).
 - [x] **Day 10**: Job Application CRUD (Update & Delete with ownership security).
-- [ ] **Day 11**: Search, Filtering, Pagination & Sorting.
+- [x] **Day 11**: Search, Filtering, Pagination & Sorting.
 - [ ] **Day 12**: Analytics endpoints, test suites & API documentation.
