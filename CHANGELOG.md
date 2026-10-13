@@ -4,6 +4,34 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 11] - 2026-10-14
+
+### Added
+- **Project 01 (Job Application Tracker)**:
+  - Built Modular Query Builder Engine (`src/utils/queryBuilder.js`):
+    - `escapeRegex`: sanitizes incoming user search strings against regex metacharacters (`[-[\]{}()*+?.,\\^$|#\s]`), eliminating ReDoS vulnerabilities and unexpected pattern errors.
+    - `parseCommaSeparated`: parses delimited or array query strings into trimmed, sanitized filter arrays.
+    - `buildApplicationFilter`: constructs multi-tenant query objects enforcing `{ user: userId }` isolation across all filter combinations.
+    - `buildSortOptions`: validates requested sort fields against an audited whitelist (`createdAt`, `updatedAt`, `applicationDate`, `company`, `position`, `priority`, `status`, `salary.min`, `salary.max`, `followUpDate`) and assigns directional sort indices (`1` for `asc`, `-1` for `desc`).
+    - `buildPaginationMetadata`: calculates total pages, boundaries, and bidirectional traversal pointers (`hasNextPage`, `hasPrevPage`, `nextPage`, `prevPage`).
+  - Advanced Multi-Criteria Query Support (`src/controllers/application.controller.js`):
+    - Multi-value enum filtering for `status`, `jobType`, `workLocation`, and `priority` using `$in` matching.
+    - Case-insensitive substring searching and text index querying (`search`, `searchType=regex` / `searchType=text`) across company, position, notes, and location.
+    - Dedicated field-level searching on `company` and `position`.
+    - Soft-archive state filtering (`isArchived`) and follow-up tracking (`hasFollowUp`).
+    - Salary range filtering (`minSalary`, `maxSalary`) evaluating ranges against `salary.min` and `salary.max`.
+    - Date range filtering (`fromDate` / `startDate` to `toDate` / `endDate`) on `applicationDate`.
+  - Joi Schema Validation Enhancements (`src/validations/application.validation.js`):
+    - Added `commaSeparatedEnumValidator` to accept both single enum strings and comma-delimited enum lists for `status`, `jobType`, `workLocation`, and `priority`.
+    - Added validation rules for `searchType`, `company`, `position`, `minSalary`, `maxSalary`, `fromDate`, `toDate`, `startDate`, `endDate`, and `hasFollowUp`.
+    - Expanded allowed `sortBy` whitelist.
+  - Automated Test Suites:
+    - Added QueryBuilder unit test suite (`test/queryBuilder.test.js`) verifying regex escaping, comma parsing, filter compilation, sort building, and pagination edge cases.
+    - Added comprehensive integration test suite (`test/application.query.api.test.js`) covering keyword searching, text search fallback, regex safety, multi-enum filtering, date/salary range queries, sorting order, pagination metadata traversal, combined query scenarios, and 400 Bad Request validation rejections.
+  - Updated Project 01 README documentation and marked Day 11 complete in `ROADMAP.md`.
+
+---
+
 ## [Day 10] - 2026-10-11
 
 ### Added
