@@ -2,6 +2,11 @@ const { Application } = require('../models/application.model');
 const ApiResponse = require('../utils/apiResponse');
 const ApiError = require('../utils/apiError');
 const asyncHandler = require('../utils/asyncHandler');
+const {
+  buildApplicationFilter,
+  buildSortOptions,
+  buildPaginationMetadata
+} = require('../utils/queryBuilder');
 
 /**
  * Controller handling Job Application lifecycle and querying operations.
@@ -37,67 +42,33 @@ const applicationController = {
    */
   getApplications: asyncHandler(async (req, res) => {
     const {
-      search,
-      status,
-      jobType,
-      workLocation,
-      priority,
-      isArchived,
       page = 1,
       limit = 10,
       sortBy = 'createdAt',
       sortOrder = 'desc'
     } = req.query;
 
-    // Enforce strict multi-tenant user isolation
-    const filter = { user: req.user._id };
+    // Build filter with strict multi-tenant isolation
+    const filter = buildApplicationFilter(req.query, req.user._id);
 
-    if (status) {
-      filter.status = status;
-    }
-    if (jobType) {
-      filter.jobType = jobType;
-    }
-    if (workLocation) {
-      filter.workLocation = workLocation;
-    }
-    if (priority) {
-      filter.priority = priority;
-    }
-    if (typeof isArchived === 'boolean') {
-      filter.isArchived = isArchived;
-    }
-    if (search && search.trim()) {
-      filter.$text = { $search: search.trim() };
-    }
-
-    // Pagination bounds calculation
-    const parsedPage = parseInt(page, 10);
-    const parsedLimit = parseInt(limit, 10);
+    // Build sort options and pagination parameters
+    const sort = buildSortOptions(sortBy, sortOrder);
+    const parsedPage = parseInt(page, 10) || 1;
+    const parsedLimit = parseInt(limit, 10) || 10;
     const skip = (parsedPage - 1) * parsedLimit;
-    const sort = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
 
     const [applications, total] = await Promise.all([
       Application.find(filter).sort(sort).skip(skip).limit(parsedLimit),
       Application.countDocuments(filter)
     ]);
 
-    const totalPages = Math.ceil(total / parsedLimit) || 1;
-    const hasNextPage = parsedPage < totalPages;
-    const hasPrevPage = parsedPage > 1;
+    const pagination = buildPaginationMetadata(parsedPage, parsedLimit, total);
 
     return ApiResponse.ok(
       res,
       {
         applications,
-        pagination: {
-          total,
-          page: parsedPage,
-          limit: parsedLimit,
-          totalPages,
-          hasNextPage,
-          hasPrevPage
-        }
+        pagination
       },
       'Job applications retrieved successfully'
     );

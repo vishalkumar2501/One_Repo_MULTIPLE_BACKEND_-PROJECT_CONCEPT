@@ -218,19 +218,59 @@ const updateStatusSchema = {
 };
 
 /**
+ * Helper validator for comma-separated enums or single enum values.
+ */
+const commaSeparatedEnumValidator = (allowedValues, fieldName) => (value, helpers) => {
+  if (!value || typeof value !== 'string') return value;
+  const items = value.split(',').map((v) => v.trim()).filter(Boolean);
+  if (items.length === 0) {
+    return helpers.error('any.invalid');
+  }
+  for (const item of items) {
+    if (!allowedValues.includes(item)) {
+      return helpers.message(`${fieldName} must be one of: ${allowedValues.join(', ')}`);
+    }
+  }
+  return value;
+};
+
+/**
  * Validation schema for listing / filtering / searching applications.
  */
 const queryApplicationsSchema = {
   query: Joi.object({
     search: Joi.string().trim().allow(''),
-    status: Joi.string().valid(...APPLICATION_STATUSES),
-    jobType: Joi.string().valid(...JOB_TYPES),
-    workLocation: Joi.string().valid(...WORK_LOCATIONS),
-    priority: Joi.string().valid(...APPLICATION_PRIORITIES),
+    searchType: Joi.string().valid('regex', 'text').default('regex'),
+    company: Joi.string().trim().max(100).allow(''),
+    position: Joi.string().trim().max(100).allow(''),
+    status: Joi.string().custom(commaSeparatedEnumValidator(APPLICATION_STATUSES, 'Status')),
+    jobType: Joi.string().custom(commaSeparatedEnumValidator(JOB_TYPES, 'Job type')),
+    workLocation: Joi.string().custom(commaSeparatedEnumValidator(WORK_LOCATIONS, 'Work location')),
+    priority: Joi.string().custom(commaSeparatedEnumValidator(APPLICATION_PRIORITIES, 'Priority')),
     isArchived: Joi.boolean(),
+    hasFollowUp: Joi.boolean(),
+    minSalary: Joi.number().min(0),
+    maxSalary: Joi.number().min(0),
+    fromDate: Joi.date().iso(),
+    toDate: Joi.date().iso(),
+    startDate: Joi.date().iso(),
+    endDate: Joi.date().iso(),
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(10),
-    sortBy: Joi.string().valid('createdAt', 'updatedAt', 'applicationDate', 'company', 'position', 'priority').default('createdAt'),
+    sortBy: Joi.string()
+      .valid(
+        'createdAt',
+        'updatedAt',
+        'applicationDate',
+        'company',
+        'position',
+        'priority',
+        'status',
+        'salary.min',
+        'salary.max',
+        'followUpDate'
+      )
+      .default('createdAt'),
     sortOrder: Joi.string().valid('asc', 'desc').default('desc')
   })
 };
