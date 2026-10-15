@@ -1,0 +1,34 @@
+{
+  "name": "02-expense-budget-tracker",
+  "version": "1.0.0",
+  "description": "Expense & Budget Tracker REST API - Project 02 of Multi-Backend Concept Series",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "expense-tracker",
+    "budget-tracker",
+    "backend",
+    "express",
+    "mongodb",
+    "mongoose",
+    "aggregations",
+    "rest-api"
+  ],
+  "author": "Vishal Kumar",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "joi": "^18.2.9",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.10.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
