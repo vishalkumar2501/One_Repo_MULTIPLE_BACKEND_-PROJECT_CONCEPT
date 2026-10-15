@@ -4,6 +4,33 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 12] - 2026-10-15
+
+### Added
+- **Project 01 (Job Application Tracker)**:
+  - Implemented High-Performance MongoDB Multi-Facet Aggregation Pipeline (`src/models/application.model.js`):
+    - Added `Application.getApplicationAnalytics(userId)` static method executing single-roundtrip `$facet` aggregation with strict multi-tenant `{ user: userId }` isolation.
+    - Aggregated status breakdowns across all valid lifecycle states (`applied`, `interviewing`, `offered`, `rejected`, `withdrawn`) with automatic zero-default mapping.
+    - Aggregated priority distributions (`low`, `medium`, `high`).
+    - Aggregated job type distributions (`full-time`, `part-time`, `contract`, `internship`, `freelance`).
+    - Aggregated work location models (`remote`, `hybrid`, `onsite`).
+    - Computed operational overview metrics: `total`, `active`, `archived`, `pendingFollowUps`, and `totalInterviewStages`.
+    - Computed interview stage outcomes (`scheduled`, `passed`, `failed`, `completed`, `cancelled`).
+    - Extracted 12-month timeline application trends (`year`, `month`, `count`).
+  - Implemented Application Statistics API Controller & Route (`src/controllers/application.controller.js` & `src/routes/application.routes.js`):
+    - Added `applicationController.getApplicationStats` returning standard `200 OK` ApiResponse with formatted analytics payload.
+    - Added route `GET /api/v1/applications/stats` protected by JWT `authenticate` middleware, positioned preceding parameterized routes to eliminate ID routing collisions.
+    - Exposed `applicationStats` in root API welcome payload (`src/app.js`).
+  - Added Comprehensive Automated Unit & Integration Test Suites:
+    - Added unit test cases for `getStatusCountsByUser` and `getApplicationAnalytics` in `test/application.model.test.js`.
+    - Added integration test suite `test/application.stats.api.test.js` validating authentication protection (401 Unauthorized), empty state zero-count defaults, active multi-facet metrics calculation, and cross-user multi-tenant isolation.
+    - Total tests in Project 01 increased to 213 passing tests across 49 suites.
+  - Finalized Project 01 Documentation & Roadmap:
+    - Updated Project 01 README with endpoint specifications, request/response examples, and completed Day 1-12 roadmap.
+    - Updated repository `ROADMAP.md` setting Project 01 to `Completed` status.
+
+---
+
 ## [Day 11] - 2026-10-14
 
 ### Added

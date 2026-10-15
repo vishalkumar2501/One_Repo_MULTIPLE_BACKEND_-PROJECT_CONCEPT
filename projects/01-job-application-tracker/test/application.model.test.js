@@ -322,4 +322,67 @@ describe('Job Application Model & Schema Unit Tests', () => {
     assert.strictEqual(query.getQuery().user.toString(), sampleUserId.toString());
     assert.strictEqual(query.getQuery().status, 'applied');
   });
+
+  test('static getStatusCountsByUser should aggregate counts and initialize defaults', async () => {
+    const originalAggregate = Application.aggregate;
+    Application.aggregate = async (pipeline) => {
+      assert.strictEqual(pipeline[0].$match.user.toString(), sampleUserId.toString());
+      return [
+        { _id: 'applied', count: 4 },
+        { _id: 'interviewing', count: 2 }
+      ];
+    };
+
+    try {
+      const counts = await Application.getStatusCountsByUser(sampleUserId);
+      assert.strictEqual(counts.applied, 4);
+      assert.strictEqual(counts.interviewing, 2);
+      assert.strictEqual(counts.offered, 0);
+      assert.strictEqual(counts.rejected, 0);
+      assert.strictEqual(counts.withdrawn, 0);
+      assert.strictEqual(counts.total, 6);
+    } finally {
+      Application.aggregate = originalAggregate;
+    }
+  });
+
+  test('static getApplicationAnalytics should compute multi-facet metrics and default zeros', async () => {
+    const originalAggregate = Application.aggregate;
+    Application.aggregate = async (pipeline) => {
+      assert.strictEqual(pipeline[0].$match.user.toString(), sampleUserId.toString());
+      assert.ok(pipeline[1].$facet);
+      return [
+        {
+          byStatus: [{ _id: 'applied', count: 5 }],
+          byPriority: [{ _id: 'high', count: 3 }],
+          byJobType: [{ _id: 'full-time', count: 4 }],
+          byWorkLocation: [{ _id: 'remote', count: 5 }],
+          overview: [{ total: 5, active: 4, archived: 1, pendingFollowUps: 2 }],
+          interviewStages: [{ _id: 'passed', count: 2 }],
+          monthlyTrends: [{ _id: { year: 2026, month: 10 }, count: 5 }]
+        }
+      ];
+    };
+
+    try {
+      const analytics = await Application.getApplicationAnalytics(sampleUserId);
+      assert.strictEqual(analytics.overview.total, 5);
+      assert.strictEqual(analytics.overview.active, 4);
+      assert.strictEqual(analytics.overview.archived, 1);
+      assert.strictEqual(analytics.overview.pendingFollowUps, 2);
+      assert.strictEqual(analytics.overview.totalInterviewStages, 2);
+      assert.strictEqual(analytics.byStatus.applied, 5);
+      assert.strictEqual(analytics.byStatus.offered, 0);
+      assert.strictEqual(analytics.byPriority.high, 3);
+      assert.strictEqual(analytics.byPriority.low, 0);
+      assert.strictEqual(analytics.byJobType['full-time'], 4);
+      assert.strictEqual(analytics.byWorkLocation.remote, 5);
+      assert.strictEqual(analytics.interviewStages.passed, 2);
+      assert.strictEqual(analytics.interviewStages.total, 2);
+      assert.strictEqual(analytics.monthlyTrends.length, 1);
+      assert.strictEqual(analytics.monthlyTrends[0].count, 5);
+    } finally {
+      Application.aggregate = originalAggregate;
+    }
+  });
 });

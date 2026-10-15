@@ -35,7 +35,8 @@ app.get('/', (req, res) => {
         authRegister: '/api/v1/auth/register',
         authLogin: '/api/v1/auth/login',
         authMe: '/api/v1/auth/me',
-        applications: '/api/v1/applications'
+        applications: '/api/v1/applications',
+        applicationStats: '/api/v1/applications/stats'
       }
     },
     'Welcome to Job Application Tracker API'

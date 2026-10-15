@@ -179,6 +179,7 @@ Authorization: Bearer <your_jwt_access_token>
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/v1/applications` | Create a new job application linked to authenticated user | Bearer Token (`authenticate`) |
 | `GET` | `/api/v1/applications` | List applications with pagination, sorting, and filters | Bearer Token (`authenticate`) |
+| `GET` | `/api/v1/applications/stats` | Pipeline statistics, breakdown counts, and monthly trends | Bearer Token (`authenticate`) |
 | `GET` | `/api/v1/applications/:id` | Get single application by ID with strict user isolation | Bearer Token (`authenticate`) |
 | `PUT` | `/api/v1/applications/:id` | Update all or partial fields of an application | Bearer Token (`authenticate`) |
 | `PATCH` | `/api/v1/applications/:id` | Partially update fields of an application | Bearer Token (`authenticate`) |
@@ -379,6 +380,70 @@ Authorization: Bearer <your_jwt_access_token>
 }
 ```
 
+#### Example: Application Analytics & Statistics (`GET /api/v1/applications/stats`)
+
+**Request Headers:**
+```http
+Authorization: Bearer <your_jwt_access_token>
+```
+
+**Success Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Application statistics and analytics retrieved successfully",
+  "data": {
+    "stats": {
+      "overview": {
+        "total": 22,
+        "active": 20,
+        "archived": 2,
+        "pendingFollowUps": 4,
+        "totalInterviewStages": 10
+      },
+      "byStatus": {
+        "applied": 12,
+        "interviewing": 5,
+        "offered": 2,
+        "rejected": 3,
+        "withdrawn": 0,
+        "total": 22
+      },
+      "byPriority": {
+        "low": 4,
+        "medium": 10,
+        "high": 8
+      },
+      "byJobType": {
+        "full-time": 16,
+        "part-time": 0,
+        "contract": 4,
+        "internship": 2,
+        "freelance": 0
+      },
+      "byWorkLocation": {
+        "remote": 14,
+        "hybrid": 6,
+        "onsite": 2
+      },
+      "interviewStages": {
+        "scheduled": 3,
+        "completed": 2,
+        "cancelled": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 10
+      },
+      "monthlyTrends": [
+        { "year": 2026, "month": 10, "count": 14 },
+        { "year": 2026, "month": 9, "count": 8 }
+      ]
+    }
+  }
+}
+```
+
 ---
 
 ## 🔒 Security & Middleware
@@ -425,4 +490,4 @@ The Job Application entity (`src/models/application.model.js`) is designed for m
 - [x] **Day 9**: Job Application CRUD (Create & Read with User Isolation).
 - [x] **Day 10**: Job Application CRUD (Update & Delete with ownership security).
 - [x] **Day 11**: Search, Filtering, Pagination & Sorting.
-- [ ] **Day 12**: Analytics endpoints, test suites & API documentation.
+- [x] **Day 12**: Analytics endpoints, test suites & API documentation.

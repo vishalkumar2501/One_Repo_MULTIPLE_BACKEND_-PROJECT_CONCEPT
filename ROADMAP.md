@@ -8,8 +8,8 @@ A multi-project repository demonstrating backend architectures, clean code princ
 
 | Project # | Project Name | Focus Concepts | Days | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **01** | **Job Application Tracker API** | CRUD, Express, MongoDB, Mongoose, JWT, Auth Middleware, Joi Validation, Pagination, Filtering, Search | Days 1–12 | `In Progress` |
-| **02** | **Expense & Budget Tracker API** | Aggregation Pipelines, Category Analytics, Date-range Filtering, Monthly Limits, Export Concepts | Days 13–24 | `Planned` |
+| **01** | **Job Application Tracker API** | CRUD, Express, MongoDB, Mongoose, JWT, Auth Middleware, Joi Validation, Pagination, Filtering, Search | Days 1–12 | `Completed` |
+| **02** | **Expense & Budget Tracker API** | Aggregation Pipelines, Category Analytics, Date-range Filtering, Monthly Limits, Export Concepts | Days 13–24 | `In Progress` |
 | **03** | **Blog & Community Platform API** | Role-Based Access Control (RBAC), Nested Comments, Slugs, Full-Text Search, Rate Limiting | Days 25–36 | `Planned` |
 | **04** | **Product Inventory & Order API** | Inventory Management, SKU Tracking, Mongoose Transactions (ACID), Order State Machine, Low-stock alerts | Days 37–48 | `Planned` |
 | **05** | **URL Shortener & Analytics API** | Base62 encoding, Click stream tracking, Referrer/Device metrics, In-memory/Redis caching, TTL links | Days 49–58 | `Planned` |
@@ -21,7 +21,7 @@ A multi-project repository demonstrating backend architectures, clean code princ
 
 ## Detailed Daily Breakdown
 
-### Project 1: Job Application Tracker API (Days 1–12)
+### Project 1: Job Application Tracker API (Days 1–12) - `Completed`
 - [x] **Day 1**: Project workspace structure, root & project package.json, base configuration, `.gitignore`, `.env.example`
 - [x] **Day 2**: Express server setup, environment config, graceful shutdown, health check endpoint
 - [x] **Day 3**: MongoDB connection with Mongoose, connection retry logic, database event listeners
@@ -31,8 +31,25 @@ A multi-project repository demonstrating backend architectures, clean code princ
 - [x] **Day 7**: Authentication & Authorization middleware (JWT verification, payload extraction, error handling)
 - [x] **Day 8**: Job Application Model & Schema with status enums, dates, company details, and user association
 - [x] **Day 9**: Job Application CRUD Controllers & Routes (Create, Read One, Read All with User Isolation)
+- [x] **Day 10**: Job Application Update & Delete Controllers & Routes (PUT/PATCH, Status Transition, Interview Stages, Archive/Unarchive)
 - [x] **Day 11**: Advanced Querying: Filtering by status/job type, Search by title/company, Pagination & Sorting
-- [ ] **Day 12**: Application Analytics (status breakdown, count aggregations), comprehensive testing & documentation
+- [x] **Day 12**: Application Analytics (status breakdown, count aggregations), comprehensive testing & documentation
+
+---
+
+### Project 2: Expense & Budget Tracker API (Days 13–24) - `In Progress`
+- [x] **Day 13**: Project workspace initialization, package.json, environment config, Express server, health check, MongoDB connection & database architecture
+- [ ] **Day 14**: User Account & Category Models with predefined vs custom categories
+- [ ] **Day 15**: Expense Model & Validation with receipt notes, payment methods, tags, and date indexing
+- [ ] **Day 16**: Expense CRUD APIs with multi-tenant user isolation
+- [ ] **Day 17**: Date-range filtering & category-based querying
+- [ ] **Day 18**: Monthly Budget Model & Budget Limit configuration
+- [ ] **Day 19**: Budget tracking & Over-budget alert triggers
+- [ ] **Day 20**: Aggregation Pipeline: Category breakdown & monthly spend analytics
+- [ ] **Day 21**: Aggregation Pipeline: Income vs Expense cashflow summaries
+- [ ] **Day 22**: Recurring Expenses / Subscription tracking
+- [ ] **Day 23**: Data export concepts (CSV/JSON summary)
+- [ ] **Day 24**: Comprehensive test suites, performance indexing & complete documentation
 
 ---
 

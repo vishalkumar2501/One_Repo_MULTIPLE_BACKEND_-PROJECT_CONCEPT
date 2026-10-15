@@ -39,6 +39,16 @@ router.get(
 );
 
 /**
+ * @route   GET /api/v1/applications/stats
+ * @desc    Get aggregated statistics and analytics for authenticated user's job pipeline
+ * @access  Private (Bearer Token required)
+ */
+router.get(
+  '/stats',
+  applicationController.getApplicationStats
+);
+
+/**
  * @route   GET /api/v1/applications/:id
  * @desc    Get single job application by ID with user ownership check
  * @access  Private (Bearer Token required)

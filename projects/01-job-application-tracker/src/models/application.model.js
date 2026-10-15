@@ -389,6 +389,172 @@ applicationSchema.statics.getStatusCountsByUser = async function (userId) {
   };
 };
 
+/**
+ * Static method: Aggregate comprehensive analytics & breakdown metrics for a specific user.
+ * @param {mongoose.Types.ObjectId|string} userId - User ID
+ * @returns {Promise<Object>} Aggregated analytics metrics report
+ */
+applicationSchema.statics.getApplicationAnalytics = async function (userId) {
+  const userObjectId = typeof userId === 'string' ? new mongoose.Types.ObjectId(userId) : userId;
+
+  const [result] = await this.aggregate([
+    { $match: { user: userObjectId } },
+    {
+      $facet: {
+        byStatus: [
+          { $group: { _id: '$status', count: { $sum: 1 } } }
+        ],
+        byPriority: [
+          { $group: { _id: '$priority', count: { $sum: 1 } } }
+        ],
+        byJobType: [
+          { $group: { _id: '$jobType', count: { $sum: 1 } } }
+        ],
+        byWorkLocation: [
+          { $group: { _id: '$workLocation', count: { $sum: 1 } } }
+        ],
+        overview: [
+          {
+            $group: {
+              _id: null,
+              total: { $sum: 1 },
+              archived: {
+                $sum: { $cond: [{ $eq: ['$isArchived', true] }, 1, 0] }
+              },
+              active: {
+                $sum: { $cond: [{ $eq: ['$isArchived', false] }, 1, 0] }
+              },
+              pendingFollowUps: {
+                $sum: {
+                  $cond: [
+                    {
+                      $and: [
+                        { $ne: ['$followUpDate', null] },
+                        { $gte: ['$followUpDate', new Date()] }
+                      ]
+                    },
+                    1,
+                    0
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        interviewStages: [
+          { $unwind: '$interviewStages' },
+          { $group: { _id: '$interviewStages.status', count: { $sum: 1 } } }
+        ],
+        monthlyTrends: [
+          {
+            $group: {
+              _id: {
+                year: { $year: '$applicationDate' },
+                month: { $month: '$applicationDate' }
+              },
+              count: { $sum: 1 }
+            }
+          },
+          { $sort: { '_id.year': -1, '_id.month': -1 } },
+          { $limit: 12 }
+        ]
+      }
+    }
+  ]);
+
+  // Format status map with 0-defaults
+  const statusCounts = APPLICATION_STATUSES.reduce((acc, status) => {
+    acc[status] = 0;
+    return acc;
+  }, {});
+  (result?.byStatus || []).forEach((item) => {
+    if (statusCounts[item._id] !== undefined) {
+      statusCounts[item._id] = item.count;
+    }
+  });
+
+  // Format priority map with 0-defaults
+  const priorityCounts = APPLICATION_PRIORITIES.reduce((acc, prio) => {
+    acc[prio] = 0;
+    return acc;
+  }, {});
+  (result?.byPriority || []).forEach((item) => {
+    if (priorityCounts[item._id] !== undefined) {
+      priorityCounts[item._id] = item.count;
+    }
+  });
+
+  // Format jobType map with 0-defaults
+  const jobTypeCounts = JOB_TYPES.reduce((acc, type) => {
+    acc[type] = 0;
+    return acc;
+  }, {});
+  (result?.byJobType || []).forEach((item) => {
+    if (jobTypeCounts[item._id] !== undefined) {
+      jobTypeCounts[item._id] = item.count;
+    }
+  });
+
+  // Format workLocation map with 0-defaults
+  const workLocationCounts = WORK_LOCATIONS.reduce((acc, loc) => {
+    acc[loc] = 0;
+    return acc;
+  }, {});
+  (result?.byWorkLocation || []).forEach((item) => {
+    if (workLocationCounts[item._id] !== undefined) {
+      workLocationCounts[item._id] = item.count;
+    }
+  });
+
+  // Format interview stages map with 0-defaults
+  const interviewStageCounts = INTERVIEW_STAGE_STATUSES.reduce((acc, s) => {
+    acc[s] = 0;
+    return acc;
+  }, {});
+  let totalInterviewStages = 0;
+  (result?.interviewStages || []).forEach((item) => {
+    if (interviewStageCounts[item._id] !== undefined) {
+      interviewStageCounts[item._id] = item.count;
+      totalInterviewStages += item.count;
+    }
+  });
+
+  const overviewData = result?.overview?.[0] || {
+    total: 0,
+    archived: 0,
+    active: 0,
+    pendingFollowUps: 0
+  };
+
+  const monthlyTrends = (result?.monthlyTrends || []).map((item) => ({
+    year: item._id.year,
+    month: item._id.month,
+    count: item.count
+  }));
+
+  return {
+    overview: {
+      total: overviewData.total,
+      active: overviewData.active,
+      archived: overviewData.archived,
+      pendingFollowUps: overviewData.pendingFollowUps,
+      totalInterviewStages
+    },
+    byStatus: {
+      ...statusCounts,
+      total: overviewData.total
+    },
+    byPriority: priorityCounts,
+    byJobType: jobTypeCounts,
+    byWorkLocation: workLocationCounts,
+    interviewStages: {
+      ...interviewStageCounts,
+      total: totalInterviewStages
+    },
+    monthlyTrends
+  };
+};
+
 const Application = mongoose.model('Application', applicationSchema);
 
 module.exports = {

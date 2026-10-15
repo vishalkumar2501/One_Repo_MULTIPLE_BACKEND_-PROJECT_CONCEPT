@@ -286,6 +286,22 @@ const applicationController = {
       { application },
       'Job application unarchived successfully'
     );
+  }),
+
+  /**
+   * Get application pipeline statistics and analytics for the authenticated user.
+   *
+   * @route GET /api/v1/applications/stats
+   * @access Private
+   */
+  getApplicationStats: asyncHandler(async (req, res) => {
+    const stats = await Application.getApplicationAnalytics(req.user._id);
+
+    return ApiResponse.ok(
+      res,
+      { stats },
+      'Application statistics and analytics retrieved successfully'
+    );
   })
 };
 
