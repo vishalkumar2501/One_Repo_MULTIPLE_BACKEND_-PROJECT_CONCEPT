@@ -4,6 +4,34 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 13] - 2026-10-16
+
+### Added
+- **Project 02 (Expense & Budget Tracker)**:
+  - Initialized Project 02 Workspace & Architecture (`projects/02-expense-budget-tracker`):
+    - Created dedicated `package.json` with scripts for `start`, `dev` (nodemon), and `test` (Node.js test runner).
+    - Configured `.env.example` and `.gitignore` preventing sensitive credential leaks.
+    - Added structured environment loader (`src/config/env.js`) with frozen configuration immutability, port defaulting (5001), and MongoDB URI configuration.
+    - Implemented resilient Mongoose connection manager (`src/config/db.js`) featuring exponential backoff retry logic, lifecycle event listeners, state introspection (`getConnectionState`), and clean disconnection (`disconnectDB`).
+    - Built standardized REST API response envelope (`src/utils/apiResponse.js`) and structured operational error class (`src/utils/apiError.js`).
+    - Implemented async controller error-forwarding wrapper (`src/utils/asyncHandler.js`).
+    - Implemented 404 Not Found (`src/middleware/notFound.js`) and global centralized error handling middleware (`src/middleware/errorHandler.js`).
+    - Configured health check controller and routes (`src/controllers/health.controller.js` & `src/routes/health.routes.js`) exposing uptime, memory telemetry, and database connectivity.
+    - Configured Express application pipeline (`src/app.js`) and server bootstrap with graceful shutdown handlers (`src/index.js`) for SIGINT, SIGTERM, uncaughtException, and unhandledRejection.
+  - Automated Test Suites:
+    - Added Configuration unit test suite (`test/config.test.js`).
+    - Added Database connection retry and lifecycle unit tests (`test/db.test.js`).
+    - Added Express app and Health check integration tests (`test/app.test.js`).
+    - Added ApiError & ApiResponse unit tests (`test/utils.test.js`).
+    - Added AsyncHandler utility unit tests (`test/asyncHandler.test.js`).
+    - 16 test cases passing across 5 suites.
+  - Documentation & Workspace Updates:
+    - Added comprehensive Project 02 README with architecture outline, endpoints, and Day 13–24 roadmap.
+    - Updated root `package.json` with `start:project-02`, `dev:project-02`, and `test:project-02` scripts.
+    - Updated repository `ROADMAP.md` marking Project 02 status as `In Progress` with Day 13 completed.
+
+---
+
 ## [Day 12] - 2026-10-15
 
 ### Added
