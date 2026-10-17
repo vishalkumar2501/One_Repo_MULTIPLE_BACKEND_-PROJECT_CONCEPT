@@ -39,7 +39,7 @@ A multi-project repository demonstrating backend architectures, clean code princ
 
 ### Project 2: Expense & Budget Tracker API (Days 13–24) - `In Progress`
 - [x] **Day 13**: Project workspace initialization, package.json, environment config, Express server, health check, MongoDB connection & database architecture
-- [ ] **Day 14**: User Account & Category Models with predefined vs custom categories
+- [x] **Day 14**: User Account & Category Models with predefined vs custom categories
 - [ ] **Day 15**: Expense Model & Validation with receipt notes, payment methods, tags, and date indexing
 - [ ] **Day 16**: Expense CRUD APIs with multi-tenant user isolation
 - [ ] **Day 17**: Date-range filtering & category-based querying

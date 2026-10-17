@@ -4,6 +4,40 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 14] - 2026-10-17
+
+### Added
+- **Project 02 (Expense & Budget Tracker)**:
+  - User Account Model & Security Layer (`src/models/user.model.js`):
+    - Implemented User Mongoose schema with fields for `name`, unique normalized `email`, bcrypt-hashed `password` (excluded by default from projections), default `currency` (USD, EUR, GBP, INR, CAD, etc.), baseline `monthlyIncome`, `role` (`user` | `admin`), and account status flags.
+    - Pre-save lifecycle hook with salt generation and bcrypt hashing for password modifications.
+    - Added instance methods: `comparePassword`, `toSafeObject`, and `generateAuthToken` (JWT signing).
+    - Added static helper methods: `findByEmail` and `isEmailTaken`.
+  - Category Model with Predefined vs. Custom Category Architecture (`src/models/category.model.js`):
+    - Designed unified category system supporting system-wide predefined categories and user-specific custom categories.
+    - Built-in system predefined categories (11 standard expense categories: Food & Dining, Housing & Rent, Utilities, Transportation, Healthcare, Entertainment, Shopping, Education, Personal Care, Travel, Miscellaneous; 5 income categories: Salary, Freelance & Consulting, Investments & Dividends, Gifts & Grants, Other Income).
+    - Added pre-validation hooks for automatic URL-friendly slug generation and strict constraint validation (`user: null` for predefined; required `user` ObjectId for custom categories).
+    - Created compound indexes: `{ name: 1, type: 1, user: 1 }` (unique category names per user/type), `{ user: 1, isActive: 1, type: 1 }`, and `{ isPredefined: 1, isActive: 1 }`.
+    - Added authorization method `canModify(userId)` restricting editing/deletion rights solely to the custom category owner.
+    - Implemented static query methods: `getPredefinedCategories`, `getCategoriesForUser`, `findAccessibleById`, `isNameTaken`, and idempotent seeder `seedPredefinedCategories`.
+  - Authentication Token Utility (`src/utils/token.js`):
+    - Added JWT `generateToken`, `verifyToken` with structured ApiError 401 handling (expired/tampered/invalid), and `decodeToken`.
+  - Request Validation Layer (`src/validations/` & `src/middleware/validate.js`):
+    - Added `user.validation.js`: Joi schemas for `registerSchema`, `loginSchema`, `updateProfileSchema`, and `changePasswordSchema`.
+    - Added `category.validation.js`: Joi schemas for `createCategorySchema`, `updateCategorySchema`, and `queryCategorySchema`.
+    - Implemented reusable Joi `validate` middleware with field error formatting and payload sanitization.
+  - Automated Test Suites:
+    - Added JWT Token utility unit test suite (`test/token.test.js`).
+    - Added User model & schema unit test suite (`test/user.model.test.js`).
+    - Added Category model & predefined vs custom constraints unit test suite (`test/category.model.test.js`).
+    - Added Joi schemas and validation middleware unit test suite (`test/validation.test.js`).
+    - 65 test cases passing across 12 test suites in Project 02 (0 failures).
+  - Documentation & Roadmap:
+    - Updated Project 02 README with detailed schema definitions, methods, and Day 14 roadmap completion.
+    - Updated repository `ROADMAP.md` checking off Day 14.
+
+---
+
 ## [Day 13] - 2026-10-16
 
 ### Added
