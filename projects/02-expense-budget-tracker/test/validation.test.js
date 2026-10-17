@@ -30,11 +30,14 @@ describe('Validation Schemas & Middleware Unit Tests (Project 02)', () => {
     });
 
     test('registerSchema should reject invalid email and short password', () => {
-      const { error } = registerSchema.validate({
-        name: 'Jordan',
-        email: 'invalid-email',
-        password: '123'
-      });
+      const { error } = registerSchema.validate(
+        {
+          name: 'Jordan',
+          email: 'invalid-email',
+          password: '123'
+        },
+        { abortEarly: false }
+      );
 
       assert.ok(error);
       const fields = error.details.map((d) => d.path[0]);
@@ -182,7 +185,7 @@ describe('Validation Schemas & Middleware Unit Tests (Project 02)', () => {
       assert.ok(nextCalledWith);
       assert.strictEqual(nextCalledWith.statusCode, 400);
       assert.strictEqual(nextCalledWith.message, 'Validation failed');
-      assert.ok(Array.isArray(nextCalledWith.data));
+      assert.ok(Array.isArray(nextCalledWith.details));
     });
   });
 });
