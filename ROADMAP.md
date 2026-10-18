@@ -9,7 +9,7 @@ A multi-project repository demonstrating backend architectures, clean code princ
 | Project # | Project Name | Focus Concepts | Days | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **01** | **Job Application Tracker API** | CRUD, Express, MongoDB, Mongoose, JWT, Auth Middleware, Joi Validation, Pagination, Filtering, Search | Days 1–12 | `Completed` |
-| **02** | **Expense & Budget Tracker API** | Aggregation Pipelines, Category Analytics, Date-range Filtering, Monthly Limits, Export Concepts | Days 13–24 | `In Progress` |
+| **02** | **Expense & Budget Tracker API** | Aggregation Pipelines, Category Analytics, Date-range Filtering, Monthly Limits, Export Concepts | Days 13–24 | `Completed` |
 | **03** | **Blog & Community Platform API** | Role-Based Access Control (RBAC), Nested Comments, Slugs, Full-Text Search, Rate Limiting | Days 25–36 | `Planned` |
 | **04** | **Product Inventory & Order API** | Inventory Management, SKU Tracking, Mongoose Transactions (ACID), Order State Machine, Low-stock alerts | Days 37–48 | `Planned` |
 | **05** | **URL Shortener & Analytics API** | Base62 encoding, Click stream tracking, Referrer/Device metrics, In-memory/Redis caching, TTL links | Days 49–58 | `Planned` |
@@ -37,19 +37,19 @@ A multi-project repository demonstrating backend architectures, clean code princ
 
 ---
 
-### Project 2: Expense & Budget Tracker API (Days 13–24) - `In Progress`
+### Project 2: Expense & Budget Tracker API (Days 13–24) - `Completed`
 - [x] **Day 13**: Project workspace initialization, package.json, environment config, Express server, health check, MongoDB connection & database architecture
 - [x] **Day 14**: User Account & Category Models with predefined vs custom categories
-- [ ] **Day 15**: Expense Model & Validation with receipt notes, payment methods, tags, and date indexing
-- [ ] **Day 16**: Expense CRUD APIs with multi-tenant user isolation
-- [ ] **Day 17**: Date-range filtering & category-based querying
-- [ ] **Day 18**: Monthly Budget Model & Budget Limit configuration
-- [ ] **Day 19**: Budget tracking & Over-budget alert triggers
-- [ ] **Day 20**: Aggregation Pipeline: Category breakdown & monthly spend analytics
-- [ ] **Day 21**: Aggregation Pipeline: Income vs Expense cashflow summaries
-- [ ] **Day 22**: Recurring Expenses / Subscription tracking
-- [ ] **Day 23**: Data export concepts (CSV/JSON summary)
-- [ ] **Day 24**: Comprehensive test suites, performance indexing & complete documentation
+- [x] **Day 15**: Expense Model & Validation with receipt notes, payment methods, tags, and date indexing
+- [x] **Day 16**: Expense CRUD APIs with multi-tenant user isolation
+- [x] **Day 17**: Date-range filtering & category-based querying
+- [x] **Day 18**: Monthly Budget Model & Budget Limit configuration
+- [x] **Day 19**: Budget tracking & Over-budget alert triggers
+- [x] **Day 20**: Aggregation Pipeline: Category breakdown & monthly spend analytics
+- [x] **Day 21**: Aggregation Pipeline: Income vs Expense cashflow summaries
+- [x] **Day 22**: Recurring Expenses / Subscription tracking
+- [x] **Day 23**: Data export concepts (CSV/JSON summary)
+- [x] **Day 24**: Comprehensive test suites, performance indexing & complete documentation
 
 ---
 
