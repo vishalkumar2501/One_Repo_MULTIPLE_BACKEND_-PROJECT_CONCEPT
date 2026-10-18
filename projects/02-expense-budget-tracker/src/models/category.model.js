@@ -297,6 +297,8 @@ categorySchema.statics.seedPredefinedCategories = async function () {
 
 const Category = mongoose.model('Category', categorySchema);
 
+Category.Category = Category;
 module.exports = Category;
+module.exports.Category = Category;
 module.exports.PREDEFINED_CATEGORIES = PREDEFINED_CATEGORIES;
 module.exports.slugify = slugify;
