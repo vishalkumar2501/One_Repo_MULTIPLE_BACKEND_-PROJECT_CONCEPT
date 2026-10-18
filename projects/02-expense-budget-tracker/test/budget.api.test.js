@@ -4,9 +4,9 @@ const http = require('node:http');
 const mongoose = require('mongoose');
 const app = require('../src/app');
 const User = require('../src/models/user.model');
-const { Category } = require('../models/category.model');
-const { Budget } = require('../models/budget.model');
-const { Expense } = require('../models/expense.model');
+const { Category } = require('../src/models/category.model');
+const { Budget } = require('../src/models/budget.model');
+const { Expense } = require('../src/models/expense.model');
 const { generateToken } = require('../src/utils/token');
 
 describe('Budget Management & Alert Tracking API Integration Test Suite', () => {

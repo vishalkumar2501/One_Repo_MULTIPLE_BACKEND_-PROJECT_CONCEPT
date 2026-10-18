@@ -3,7 +3,7 @@ const assert = require('node:assert');
 const http = require('node:http');
 const app = require('../src/app');
 const User = require('../src/models/user.model');
-const { Category } = require('../models/category.model');
+const { Category } = require('../src/models/category.model');
 const { generateToken } = require('../src/utils/token');
 
 describe('Category Management API Integration Test Suite', () => {

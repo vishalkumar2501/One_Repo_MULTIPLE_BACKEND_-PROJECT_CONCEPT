@@ -3,7 +3,7 @@ const assert = require('node:assert');
 const http = require('node:http');
 const app = require('../src/app');
 const User = require('../src/models/user.model');
-const { Expense } = require('../models/expense.model');
+const { Expense } = require('../src/models/expense.model');
 const { generateToken } = require('../src/utils/token');
 
 describe('Data Export API Integration Test Suite', () => {

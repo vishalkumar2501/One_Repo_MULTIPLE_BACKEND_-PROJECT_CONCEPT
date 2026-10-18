@@ -3,8 +3,8 @@ const assert = require('node:assert');
 const http = require('node:http');
 const app = require('../src/app');
 const User = require('../src/models/user.model');
-const { Expense } = require('../models/expense.model');
-const { Budget } = require('../models/budget.model');
+const { Expense } = require('../src/models/expense.model');
+const { Budget } = require('../src/models/budget.model');
 const { generateToken } = require('../src/utils/token');
 
 describe('Financial Analytics & Aggregation Pipeline Integration Test Suite', () => {

@@ -114,7 +114,13 @@ const expenseSchema = new mongoose.Schema(
         enum: {
           values: RECURRING_FREQUENCIES,
           message: `Recurring frequency must be one of: ${RECURRING_FREQUENCIES.join(', ')}`
-        }
+        },
+        required: [
+          function () {
+            return this.isRecurring === true;
+          },
+          'Recurring frequency is required when transaction is marked recurring'
+        ]
       },
       nextDueDate: {
         type: Date
@@ -156,19 +162,6 @@ expenseSchema.index({ user: 1, category: 1, date: -1 });
 expenseSchema.index({ user: 1, tags: 1 });
 expenseSchema.index({ user: 1, isRecurring: 1 });
 
-/**
- * Pre-validate hook for recurring details validation.
- */
-expenseSchema.pre('validate', function () {
-  if (this.isRecurring && (!this.recurring || !this.recurring.frequency)) {
-    this.invalidate('recurring.frequency', 'Frequency is required when transaction is marked recurring');
-  }
-  if (!this.isRecurring && this.recurring) {
-    if (!this.recurring.frequency) {
-      this.recurring = undefined;
-    }
-  }
-});
 
 /**
  * Instance method: Formats expense safely for API output.
