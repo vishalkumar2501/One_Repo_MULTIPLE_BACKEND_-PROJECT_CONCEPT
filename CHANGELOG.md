@@ -4,6 +4,57 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Days 15–24] - 2026-10-18
+
+### Added
+- **Project 02 (Expense & Budget Tracker) - Completed (Days 15–24)**:
+  - **Authentication & Authorization Layer (`src/middleware/auth.js`, `src/controllers/auth.controller.js`, `src/routes/auth.routes.js`)**:
+    - Implemented `authenticate` / `protect` middleware verifying Bearer JWT tokens, database user existence, and active account status.
+    - Role-Based Access Control (RBAC) middleware `authorize(...roles)`.
+    - Endpoints for `POST /api/v1/auth/register`, `POST /api/v1/auth/login`, `GET /api/v1/auth/me`, `PATCH /api/v1/auth/profile`, and `POST /api/v1/auth/change-password`.
+  - **Category Management APIs (`src/controllers/category.controller.js`, `src/routes/category.routes.js`)**:
+    - `GET /api/v1/categories`: fetches predefined system categories merged with user custom categories, with optional `type` filter.
+    - `GET /api/v1/categories/:id`: retrieves single accessible category with authorization enforcement.
+    - `POST /api/v1/categories`: creates custom category for authenticated user with duplicate name checking.
+    - `PATCH /api/v1/categories/:id` & `DELETE /api/v1/categories/:id`: strict authorization ensuring users can only modify/delete their own custom categories (predefined system categories protected with 403 Forbidden).
+  - **Day 15: Expense & Transaction Model (`src/models/expense.model.js`, `src/validations/expense.validation.js`)**:
+    - Mongoose schema with `user`, `category`, `title`, `amount` (>0), `currency`, `type` (`expense` | `income`), `paymentMethod` (`cash`, `credit_card`, `debit_card`, `bank_transfer`, `upi`, `crypto`, `other`), `date`, `notes`, `receiptUrl`, `tags`, `isRecurring`, `recurring` (`frequency`, `nextDueDate`, `endDate`), and `status`.
+    - High-performance compound indexes: `{ user: 1, date: -1 }`, `{ user: 1, type: 1, date: -1 }`, `{ user: 1, category: 1, date: -1 }`, `{ user: 1, tags: 1 }`, and `{ user: 1, isRecurring: 1 }`.
+    - Joi validation schemas for creating, updating, and querying transactions.
+  - **Day 16 & 17: Expense CRUD APIs, Date-Range Filtering & Query Builder (`src/controllers/expense.controller.js`, `src/routes/expense.routes.js`, `src/utils/queryBuilder.js`)**:
+    - Full CRUD endpoints (`GET /api/v1/expenses`, `POST /api/v1/expenses`, `GET /api/v1/expenses/:id`, `PATCH /api/v1/expenses/:id`, `DELETE /api/v1/expenses/:id`) enforcing multi-tenant isolation.
+    - Validation verifying category accessibility and matching type (`expense` vs `income`).
+    - Query builder engine supporting date range (`startDate`, `endDate`), amount range (`minAmount`, `maxAmount`), multi-tag matching (`$in`), payment method, recurring flag, and regex searching on title and notes.
+    - Deterministic sorting whitelist and bidirectional pagination metadata.
+  - **Day 18 & 19: Monthly Budget Model, Budget Limits & Alert Triggers (`src/models/budget.model.js`, `src/validations/budget.validation.js`, `src/controllers/budget.controller.js`, `src/routes/budget.routes.js`)**:
+    - Mongoose budget model with compound unique index `{ user: 1, category: 1, month: 1, year: 1 }` supporting category-specific or overall monthly budgets.
+    - Dynamic variance calculation method `calculateStatus(spent)` computing spent, remaining, percentage used, and alert status (`normal`, `warning` when exceeding `alertThreshold` %, `exceeded` when > 100%).
+    - Real-time budget tracking endpoint `GET /api/v1/budgets/status` comparing live expenses against configured limits.
+    - Endpoints for `POST /api/v1/budgets`, `GET /api/v1/budgets`, `GET /api/v1/budgets/:id`, `PATCH /api/v1/budgets/:id`, and `DELETE /api/v1/budgets/:id`.
+  - **Day 20 & 21: Aggregation Pipelines - Category Analytics & Cashflow (`src/controllers/analytics.controller.js`, `src/routes/analytics.routes.js`)**:
+    - MongoDB `$group` and `$lookup` aggregation pipeline `Expense.getCategoryAnalytics` generating category-wise spend breakdowns, counts, averages, min/max amounts, and calculated percentages of total spend.
+    - 12-Month aggregation pipeline `Expense.getMonthlyCashflow` comparing monthly income vs expense, net savings, and savings rate.
+    - Executive dashboard summary endpoint `GET /api/v1/analytics/summary` aggregating monthly spend, top category, recent transactions, and active budget alert counts.
+  - **Day 22: Recurring Subscriptions Tracking (`src/controllers/expense.controller.js`)**:
+    - Endpoint `GET /api/v1/expenses/recurring` returning active subscriptions, recurring frequencies, next due dates, and projected monthly cost commitment.
+  - **Day 23: Data Export Concepts (`src/controllers/export.controller.js`, `src/routes/export.routes.js`)**:
+    - Downloadable RFC 4180 CSV export endpoint `GET /api/v1/export/csv` with sanitized header rows and field escaping.
+    - Structured JSON audit export endpoint `GET /api/v1/export/json` including user metadata, export timestamps, total income/expense summaries, and complete transaction lists.
+  - **Day 24: Comprehensive Automated Test Suites & Documentation (`test/`)**:
+    - Added `test/auth.api.test.js`: registration, login, profile, password change integration tests.
+    - Added `test/category.api.test.js`: category listing, custom creation, 403 immutability enforcement on predefined categories.
+    - Added `test/expense.model.test.js`: validation of required fields, positive amounts, payment methods, recurring frequencies.
+    - Added `test/queryBuilder.test.js`: regex escaping, comma parsing, filter building, sorting, pagination math.
+    - Added `test/expense.api.test.js`: transaction CRUD, category type mismatch validation, pagination, multi-tenant isolation, subscriptions.
+    - Added `test/budget.api.test.js`: budget CRUD, duplicate prevention, live variance calculation, warning & exceeded alert tracking.
+    - Added `test/analytics.api.test.js`: category breakdown percentages, 12-month cashflows, executive summary dashboard.
+    - Added `test/export.api.test.js`: CSV format headers and quoting, JSON metadata and summaries.
+    - Project 02 test suite expanded to 106 passing tests across 20 suites (0 failures).
+    - Updated Project 02 README with full endpoint directory, schema documentation, and roadmap completion.
+    - Updated repository `ROADMAP.md` setting Project 02 status to `Completed`.
+
+---
+
 ## [Day 14] - 2026-10-17
 
 ### Added
