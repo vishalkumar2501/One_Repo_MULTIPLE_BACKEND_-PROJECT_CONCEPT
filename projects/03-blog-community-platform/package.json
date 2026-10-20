@@ -1,0 +1,37 @@
+{
+  "name": "03-blog-community-platform",
+  "version": "1.0.0",
+  "description": "Blog & Community Platform REST API with RBAC, Nested Comments, Full-Text Search, and Slugs - Project 03 of Multi-Backend Concept Series",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "blog-platform",
+    "community-api",
+    "rbac",
+    "nested-comments",
+    "full-text-search",
+    "slugs",
+    "rate-limiting",
+    "express",
+    "mongodb",
+    "mongoose",
+    "rest-api"
+  ],
+  "author": "Vishal Kumar",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "joi": "^18.2.9",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.10.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
