@@ -10,7 +10,7 @@ A multi-project repository demonstrating backend architectures, clean code princ
 | :--- | :--- | :--- | :--- | :--- |
 | **01** | **Job Application Tracker API** | CRUD, Express, MongoDB, Mongoose, JWT, Auth Middleware, Joi Validation, Pagination, Filtering, Search | Days 1–12 | `Completed` |
 | **02** | **Expense & Budget Tracker API** | Aggregation Pipelines, Category Analytics, Date-range Filtering, Monthly Limits, Export Concepts | Days 13–24 | `Completed` |
-| **03** | **Blog & Community Platform API** | Role-Based Access Control (RBAC), Nested Comments, Slugs, Full-Text Search, Rate Limiting | Days 25–36 | `Planned` |
+| **03** | **Blog & Community Platform API** | Role-Based Access Control (RBAC), Nested Comments, Slugs, Full-Text Search, Rate Limiting | Days 25–36 | `In Progress` |
 | **04** | **Product Inventory & Order API** | Inventory Management, SKU Tracking, Mongoose Transactions (ACID), Order State Machine, Low-stock alerts | Days 37–48 | `Planned` |
 | **05** | **URL Shortener & Analytics API** | Base62 encoding, Click stream tracking, Referrer/Device metrics, In-memory/Redis caching, TTL links | Days 49–58 | `Planned` |
 | **06** | **Event Management & Booking API** | Ticket tiers, Atomic reservation, Concurrency management, QR Ticket Generation, Email dispatch | Days 59–70 | `Planned` |
@@ -50,6 +50,22 @@ A multi-project repository demonstrating backend architectures, clean code princ
 - [x] **Day 22**: Recurring Expenses / Subscription tracking
 - [x] **Day 23**: Data export concepts (CSV/JSON summary)
 - [x] **Day 24**: Comprehensive test suites, performance indexing & complete documentation
+
+---
+
+### Project 3: Blog & Community Platform API (Days 25–36) - `In Progress`
+- [x] **Day 25**: Project workspace initialization, package.json, environment config, Express server, health check, MongoDB connection & database architecture
+- [ ] **Day 26**: User & Author Models with Role-Based Access Control (RBAC: `user`, `author`, `moderator`, `admin`)
+- [ ] **Day 27**: Authentication & RBAC Authorization Middleware (JWT verification, role hierarchy, permission guards)
+- [ ] **Day 28**: Tag & Category Taxonomies with administrative CRUD endpoints and indexes
+- [ ] **Day 29**: Article Model with SEO slugs, auto-slugification, reading time calculation & publication states (`draft`, `published`, `archived`)
+- [ ] **Day 30**: Article CRUD Controllers & Publishing Workflows with author ownership enforcement
+- [ ] **Day 31**: Full-Text Search with MongoDB text indexing, score weighting, multi-faceted filtering & pagination
+- [ ] **Day 32**: Nested Comment Model with parent-child hierarchy, depth limiting & moderation flags
+- [ ] **Day 33**: Comment CRUD & Recursive Thread Retrieval Controllers & Routes
+- [ ] **Day 34**: Community Engagement: Reactions (likes, bookmarks), view counts & engagement metrics
+- [ ] **Day 35**: Sliding-Window Rate Limiting Middleware & Moderation Enforcement APIs
+- [ ] **Day 36**: Comprehensive test suites, performance compound indexing & complete documentation
 
 ---
 

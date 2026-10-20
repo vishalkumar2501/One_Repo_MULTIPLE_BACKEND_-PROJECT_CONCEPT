@@ -4,6 +4,38 @@ All notable changes across all backend projects in this repository will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Day 25] - 2026-10-20
+
+### Added
+- **Project 03 (Blog & Community Platform API) - Initialization (Day 25)**:
+  - **Workspace & Architecture Setup (`projects/03-blog-community-platform`)**:
+    - Created isolated project directory with project-level `package.json`, `.gitignore`, and `.env.example`.
+    - Integrated scripts (`start:project-03`, `dev:project-03`, `test:project-03`) into the root `package.json` and unified the root `test` runner.
+  - **Environment Configuration (`src/config/env.js`)**:
+    - Centralized environment loader validating `PORT` (default `5002`), `NODE_ENV`, `MONGO_URI`, JWT secrets, and sliding-window rate limit settings (`RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX_REQUESTS`).
+  - **Resilient MongoDB Connection Manager (`src/config/db.js`)**:
+    - Implemented `connectDB` with automated exponential backoff retries, configurable timeouts, and lifecycle event logging (`connected`, `open`, `error`, `disconnected`, `reconnected`).
+    - Added `disconnectDB` and diagnostic `getConnectionState` mapping numerical readyState values to human-readable strings.
+  - **Core Application Envelopes & Error Handling (`src/utils/`, `src/middleware/`)**:
+    - `ApiResponse`: Standardized JSON envelope providing `.success()`, `.ok()`, and `.created()`.
+    - `ApiError`: Operational error subclass with factories for 400 (`badRequest`), 401 (`unauthorized`), 403 (`forbidden`), 404 (`notFound`), 409 (`conflict`), 429 (`tooManyRequests`), and 500 (`internal`).
+    - `asyncHandler`: Promise wrapper forwarding asynchronous exceptions to Express error handling pipeline.
+    - Global `errorHandler` middleware delivering safe error payloads with sanitized production outputs.
+    - `notFoundHandler` producing structured 404 responses for undefined routes.
+  - **Express Server Bootstrap & Graceful Shutdown (`src/app.js`, `src/index.js`, `src/controllers/health.controller.js`, `src/routes/health.routes.js`)**:
+    - Express application configuration with payload parsers, development request logging, and root API directory at `GET /`.
+    - Health check endpoints at `GET /health` and `GET /api/v1/health` reporting service status, uptime, memory metrics, and live database telemetry.
+    - Graceful process termination listening to `SIGINT`, `SIGTERM`, `uncaughtException`, and `unhandledRejection` with 10-second fail-safe exit.
+  - **Automated Test Suites (`test/`)**:
+    - `test/app.test.js`: Root `/`, `/health`, `/api/v1/health`, and 404 handling.
+    - `test/db.test.js`: Connection event idempotence, readyState mapping, disconnected state inspection, and retry exhaustion handling.
+    - `test/utils.test.js`: `ApiError` status codes and `ApiResponse` envelope structures.
+    - `test/asyncHandler.test.js`: Asynchronous execution flow and rejection forwarding.
+    - All 13 tests passing across 4 test suites (0 failures).
+  - **Documentation & Roadmap**:
+    - Added comprehensive `projects/03-blog-community-platform/README.md` covering architecture, RBAC, nested comments, full-text search, and endpoint catalog.
+    - Updated repository `ROADMAP.md` setting Project 03 status to `In Progress` with a 12-day breakdown (Days 25–36).
+
 ## [Days 15–24] - 2026-10-18
 
 ### Added
