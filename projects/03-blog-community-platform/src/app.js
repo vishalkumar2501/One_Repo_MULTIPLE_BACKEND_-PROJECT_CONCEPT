@@ -1,6 +1,7 @@
 const express = require('express');
 const config = require('./config/env');
 const healthRoutes = require('./routes/health.routes');
+const authRoutes = require('./routes/auth.routes');
 const notFoundHandler = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
 const ApiResponse = require('./utils/apiResponse');
@@ -54,6 +55,9 @@ app.get('/', (req, res) => {
 // Health check endpoints
 app.use('/health', healthRoutes);
 app.use('/api/v1/health', healthRoutes);
+
+// Authentication & user management routes
+app.use('/api/v1/auth', authRoutes);
 
 // Catch unhandled routes (404)
 app.use(notFoundHandler);

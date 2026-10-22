@@ -55,7 +55,7 @@ A multi-project repository demonstrating backend architectures, clean code princ
 
 ### Project 3: Blog & Community Platform API (Days 25–36) - `In Progress`
 - [x] **Day 25**: Project workspace initialization, package.json, environment config, Express server, health check, MongoDB connection & database architecture
-- [ ] **Day 26**: User & Author Models with Role-Based Access Control (RBAC: `user`, `author`, `moderator`, `admin`)
+- [x] **Day 26**: User & Author Models with Role-Based Access Control (RBAC: `user`, `author`, `moderator`, `admin`)
 - [ ] **Day 27**: Authentication & RBAC Authorization Middleware (JWT verification, role hierarchy, permission guards)
 - [ ] **Day 28**: Tag & Category Taxonomies with administrative CRUD endpoints and indexes
 - [ ] **Day 29**: Article Model with SEO slugs, auto-slugification, reading time calculation & publication states (`draft`, `published`, `archived`)
