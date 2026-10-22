@@ -3,6 +3,45 @@
 All notable changes across all backend projects in this repository will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [Day 26] - 2026-10-22
+
+### Added
+- **Project 03 (Blog & Community Platform API) - User & Author Models with RBAC (Day 26)**:
+  - **User Model with RBAC (`src/models/user.model.js`)**:
+    - Mongoose schema with `name`, `email`, `password` (bcrypt hashed, `select: false`), four-tier `role` enum (`user`, `author`, `moderator`, `admin`), and `accountStatus` (`active`, `suspended`, `deactivated`).
+    - Author profile fields: `bio` (max 500 chars), `avatar`, `socialLinks` sub-document (`website`, `twitter`, `github`, `linkedin`), and `articlesCount` counter.
+    - Exported frozen `ROLE_HIERARCHY` map for numerical privilege comparison (`user: 0` → `admin: 3`).
+    - Performance indexes on `role`, `accountStatus`, and text index on `name`.
+    - Instance methods: `comparePassword()`, `toSafeObject()`, `generateAuthToken()`, `hasMinimumRole()`.
+    - Static methods: `findByEmail()`, `isEmailTaken()`.
+  - **JWT Token Utility (`src/utils/token.js`)**:
+    - `generateToken()` and `verifyToken()` wrapping `jsonwebtoken` with centralized secret and expiry from env config.
+  - **Joi Validation Schemas (`src/validations/auth.validation.js`)**:
+    - `registerSchema`: name (2–60 chars), email, password (6–128 chars), optional bio and avatar.
+    - `loginSchema`: email (auto-lowercase), password.
+    - `updateProfileSchema`: partial updates for name, bio, avatar, socialLinks with minimum 1 field requirement.
+    - `changePasswordSchema`: currentPassword + newPassword (min 6 chars).
+    - `assignRoleSchema`: validated against RBAC role enum for admin role assignment.
+  - **Auth Controller (`src/controllers/auth.controller.js`)**:
+    - `register`: Joi validation → duplicate email check → user creation → JWT token response.
+    - `login`: credential verification → account status check → lastLogin timestamp update → JWT response.
+    - `getMe`: returns authenticated user profile.
+    - `updateProfile`: partial field update with Joi validation and `validateModifiedOnly`.
+    - `changePassword`: current password verification → password rehash → new JWT token.
+    - `assignRole`: admin-only endpoint to change user roles with self-assignment prevention.
+  - **Authentication & RBAC Middleware (`src/middleware/auth.js`)**:
+    - `authenticate`: Bearer JWT extraction → token verification → user existence & status check → `req.user` attachment.
+    - `authorize(...roles)`: exact-role guard accepting one or more allowed roles.
+    - `requireMinRole(minRole)`: hierarchical role check using `ROLE_HIERARCHY` numerical weights.
+  - **Auth Routes (`src/routes/auth.routes.js`)**:
+    - Public: `POST /api/v1/auth/register`, `POST /api/v1/auth/login`.
+    - Protected: `GET /api/v1/auth/me`, `PATCH /api/v1/auth/profile`, `POST /api/v1/auth/change-password`.
+    - Admin-only: `PATCH /api/v1/auth/users/:userId/role`.
+  - **App Integration (`src/app.js`)**: Mounted auth routes at `/api/v1/auth`.
+  - **Automated Test Suites (`test/`)**:
+    - `test/user.model.test.js`: 25 tests covering RBAC constants, schema validation (name, email, password, role, accountStatus, bio, socialLinks, articlesCount), instance methods (`hasMinimumRole`, `toSafeObject`), and token utility.
+    - `test/auth.validation.test.js`: 23 tests covering register, login, updateProfile, changePassword, and assignRole Joi schemas.
+    - All **48 tests passing** across 9 suites (0 failures) alongside existing Day 25 tests.
 
 ## [Day 25] - 2026-10-20
 
