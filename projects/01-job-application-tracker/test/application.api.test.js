@@ -25,6 +25,7 @@ describe('Job Application (Create & Read) API Integration Test Suite', () => {
     isActive: true
   });
 
+  
   const userB = new User({
     _id: '6650a2b8e3f41234567890bb',
     name: 'Bob Engineer',
