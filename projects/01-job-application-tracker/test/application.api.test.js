@@ -274,7 +274,6 @@ describe('Job Application (Create & Read) API Integration Test Suite', () => {
 
       Application.countDocuments = async (filter) => {
         return 2;
-        return 2;
       };
 
       const res = await fetch(`${baseUrl}/api/v1/applications?page=1&limit=10&sortBy=createdAt&sortOrder=desc`, {
