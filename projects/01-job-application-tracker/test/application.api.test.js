@@ -42,13 +42,7 @@ describe('Job Application (Create & Read) API Integration Test Suite', () => {
     email: 'alice@example.com',
     role: 'user'
   });
-const userA = new User({
-    _id: '6650a2b8e3f41234567890aa',
-    name: 'Alice Developer',
-    email: 'alice@example.com',
-    role: 'user',
-    isActive: true
-  });
+
   const tokenUserB = generateToken({
     id: '6650a2b8e3f41234567890bb',
     email: 'bob@example.com',
