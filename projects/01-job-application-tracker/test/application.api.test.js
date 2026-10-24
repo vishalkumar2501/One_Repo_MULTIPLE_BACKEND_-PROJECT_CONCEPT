@@ -49,6 +49,14 @@ describe('Job Application (Create & Read) API Integration Test Suite', () => {
     role: 'user'
   });
 
+  const userA = new User({
+    _id: '6650a2b8e3f41234567890aa',
+    name: 'Alice Developer',
+    email: 'alice@example.com',
+    role: 'user',
+    isActive: true
+  });
+
   before(async () => {
     server = http.createServer(app);
     await new Promise((resolve) => {
