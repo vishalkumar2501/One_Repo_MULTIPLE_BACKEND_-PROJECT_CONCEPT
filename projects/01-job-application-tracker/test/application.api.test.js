@@ -16,7 +16,7 @@ describe('Job Application (Create & Read) API Integration Test Suite', () => {
   let originalAppFind;
   let originalAppFindOne;
   let originalAppCountDocuments;
-  let originalAppCountDocuments;
+
 
   const userA = new User({
     _id: '6650a2b8e3f41234567890aa',
